@@ -1,0 +1,64 @@
+/*@tailwind base;*/
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .filter-button {
+        @apply bg-white px-4 py-2 flex rounded-md shadow-2xl shadow-neutral-50 hover:shadow-2xl cursor-pointer transition;
+    }
+
+    .filter-button--active {
+        @apply bg-emerald-500 text-white shadow-2xl;
+    }
+
+    .filter-button__counter {
+        @apply ml-2 w-6 h-6 items-center justify-center bg-gray-200 rounded-full flex;
+    }
+
+    .filter-button__counter--active {
+        @apply bg-white text-emerald-500;
+    }
+
+    .course-list-item {
+        @apply bg-white transition hover:shadow-2xl hover:shadow-gray-200 rounded-md flex justify-between items-center shadow-sm p-6;
+    }
+
+    .course-list-item--disabled {
+        @apply bg-gray-200 hover:shadow-none
+    }
+
+    .course-list-item--completed {
+        /*@apply shadow-lg shadow-emerald-100 hover:shadow-2xl hover:shadow-emerald-200;*/
+
+    }
+
+    .status--review {
+        @apply w-full bg-blue-500 rounded-md py-1.5 text-center text-white;
+        height: 32px;
+        padding-top: 5px;
+    }
+
+    .status--rework {
+        @apply w-full bg-orange-400 rounded-md py-1.5 text-center text-white;
+        height: 32px;
+        padding-top: 5px;
+    }
+
+    .status--completed {
+        @apply w-full bg-emerald-500 rounded-md py-1.5 text-center text-white;
+        height: 32px;
+        padding-top: 5px;
+    }
+
+    .status--open {
+        @apply w-full bg-gray-200 rounded-md py-1.5 text-center text-gray-600;
+        height: 32px;
+        padding-top: 5px;
+    }
+
+    .grade {
+        @apply bg-white ml-1 p-0.5 px-1.5 rounded-md text-gray-700;
+    }
+}
+
+

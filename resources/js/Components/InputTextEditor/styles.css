@@ -1,0 +1,29 @@
+.input-text-editor > div:focus {
+    border-color: #12b981;
+    box-shadow: 0 0 0 2px rgb(18 185 129 / 20%);
+    border-right-width: 1px !important;
+    outline: 0;
+}
+
+.input-text-editor > div:hover {
+    border-color: #12b981;
+}
+
+.input-text-editor iframe, .content iframe {
+    border: none;
+    border-radius: 8px;
+}
+
+.input-text-editor > div {
+    padding: 4px 11px;
+    border: 1px solid #d9d9d9;
+    border-radius: 0.325rem;
+    line-height: 1.5715;
+    vertical-align: bottom;
+    transition: all 0.3s, height 0s;
+}
+
+.input-text-editor p, .content p {
+    margin-bottom: 0.5rem;
+    min-height: 20px;
+}
