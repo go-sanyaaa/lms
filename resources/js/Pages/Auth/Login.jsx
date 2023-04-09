@@ -1,18 +1,19 @@
 import React from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
-// import InputError from '@/Components/InputError';
-// import InputLabel from '@/Components/InputLabel';
-// import PrimaryButton from '@/Components/PrimaryButton';
-// import TextInput from '@/Components/TextInput';
 import {Head, useForm} from '@inertiajs/inertia-react';
-import {Button, Checkbox, Form, Input} from "antd";
-import {LoginOutlined} from "@ant-design/icons";
+import {Button, Checkbox, Div, FormItem, FormLayout, Group, Input} from "@vkontakte/vkui";
 import {Inertia} from "@inertiajs/inertia";
+import {Icon16DoorEnterArrowRightOutline} from "@vkontakte/icons";
 
 export default function Login({status}) {
-    const {setData, post, processing, errors} = useForm();
+    const {setData, data: form, post, processing, errors} = useForm({
+        email: '',
+        password: '',
+        remember: true
+    });
 
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault()
         post(route('login'));
     };
 
@@ -21,26 +22,38 @@ export default function Login({status}) {
             <Head title="Авторизация"/>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600 text-center">{status}</div>}
-            <div className={'flex flex-col w-full items-center justify-center'}>
-                <div className={'p-8 max-w-md w-full bg-white border border-solid border-gray-200 rounded-md'}>
-                    <Form onValuesChange={(_, values) => setData(values)} onFinish={submit} layout={'vertical'}>
-                        <Form.Item validateStatus={errors.email && 'error'} help={errors.email} name={'email'}
-                                   label={'Электронная почта'}>
-                            <Input size={'large'}/>
-                        </Form.Item>
-                        <Form.Item validateStatus={errors.password && 'error'} help={errors.password} name={'password'}
-                                   label={'Пароль'}>
-                            <Input.Password size={'large'}/>
-                        </Form.Item>
-                        <Form.Item name={'remember'} valuePropName={'checked'}>
-                            <Checkbox>Запомнить меня</Checkbox>
-                        </Form.Item>
-                        <Button block size={'large'} loading={processing} htmlType={'submit'} icon={<LoginOutlined/>}
-                                type={'primary'}>Войти</Button>
-                        <Button onClick={() => Inertia.visit(route('password.request'))} className={'mt-2'} block
-                                type={'link'}>Восстановить пароль ?</Button>
-                    </Form>
-                </div>
+            <div className={'flex flex-col items-center justify-center'}>
+                <Group className={'max-w-md w-full'}>
+                    <Div className={'w-full border rounded-md'}>
+                        <FormLayout onSubmit={submit}
+                                    layout={'vertical'}>
+                            <FormItem status={errors.email ? 'error' : ''} bottom={errors.email} name={'email'}
+                                      top={'Электронная почта'}>
+                                <Input value={form.email} onChange={(e) => setData('email', e.target.value)}/>
+                            </FormItem>
+                            <FormItem status={errors.password ? 'error' : ''} bottom={errors.password} name={'password'}
+                                      top={'Пароль'}>
+                                <Input type={'password'} value={form.password}
+                                       onChange={(e) => setData('password', e.target.value)}/>
+                            </FormItem>
+                            <FormItem name={'remember'}>
+                                <Checkbox checked={form.remember}
+                                          onChange={(e) => setData('remember', e.target.checked)}>Запомнить
+                                    меня</Checkbox>
+                            </FormItem>
+                            <FormItem>
+                                <Button loading={processing} after={<Icon16DoorEnterArrowRightOutline/>} type={'submit'}
+                                        stretched size={'m'}
+                                        mode={'primary'}>Войти</Button>
+                            </FormItem>
+                            <FormItem>
+                                <Button mode={'link'} stretched
+                                        onClick={() => Inertia.visit(route('password.request'))}>Восстановить пароль
+                                    ?</Button>
+                            </FormItem>
+                        </FormLayout>
+                    </Div>
+                </Group>
             </div>
         </GuestLayout>
     );

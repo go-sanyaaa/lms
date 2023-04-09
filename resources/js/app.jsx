@@ -2,21 +2,16 @@ import './bootstrap';
 import '../css/app.css';
 import './Components/InputTextEditor/styles.css'
 import 'antd/dist/antd.variable.less';
+import '@vkontakte/vkui/dist/vkui.css'
 
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {createInertiaApp} from '@inertiajs/inertia-react';
 import {InertiaProgress} from '@inertiajs/progress';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
-import {ConfigProvider} from 'antd';
 import 'moment/dist/locale/ru'
-import ru from 'antd/es/locale/ru_RU'
+import {AdaptivityProvider, AppRoot, ConfigProvider, WebviewType} from "@vkontakte/vkui";
 
-ConfigProvider.config({
-    theme: {
-        primaryColor: '#12b981',
-    },
-});
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -27,8 +22,12 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <ConfigProvider locale={ru}>
-                <App {...props} />
+            <ConfigProvider webviewType={WebviewType.INTERNAL} platform={'vkcom'}>
+                <AdaptivityProvider>
+                    <AppRoot mode={'partial'}>
+                        <App {...props} />
+                    </AppRoot>
+                </AdaptivityProvider>
             </ConfigProvider>
         );
     },
