@@ -4,6 +4,7 @@ import React, {useMemo, useState} from "react";
 import SetMentorModal from "@/Components/Students/SetMentorModal";
 import useToggleState from "@/helpers/useToggleState";
 import {usePage} from "@inertiajs/inertia-react";
+import {Group} from "@vkontakte/vkui";
 
 const StudentsTable = ({students, onOpen}) => {
     const [showModal,,toggleShowModal] = useToggleState(false)
@@ -95,8 +96,8 @@ const StudentsTable = ({students, onOpen}) => {
 
     return (
         <div>
-            <div className={'bg-white rounded-md mb-6 p-4 pb-1'}>
-                <span className={'text-gray-400 text-lg mb-2 flex'}>Фильтры: </span>
+            <Group>
+                <span className={'text-lg mb-2 flex'}>Фильтры: </span>
                 <Form onValuesChange={(_,filters) => setFilters(filters)} layout={'vertical'} className={'grid grid-cols-4'}>
                     <Form.Item initialValue={'all'} name={'homework'} label={'Наличие ДЗ'}>
                         <Radio.Group buttonStyle="solid">
@@ -113,7 +114,8 @@ const StudentsTable = ({students, onOpen}) => {
                         </Select>
                     </Form.Item>
                 </Form>
-            </div>
+            </Group>
+            <Group>
             <div className={'flex mb-3 justify-between'}>
                 <Button onClick={toggleShowModal} disabled={!selectedRowKeys.length}>Назначить преподавателя</Button>
                 <div className="flex space-x-3">
@@ -122,7 +124,8 @@ const StudentsTable = ({students, onOpen}) => {
                 </div>
             </div>
             <SetMentorModal students={selectedRowKeys} open={showModal} onCancel={toggleShowModal}/>
-            <Table bordered rowSelection={rowSelection} columns={columns} dataSource={filteredStudents} rowKey={'id'}/>
+                <Table bordered rowSelection={rowSelection} columns={columns} dataSource={filteredStudents} rowKey={'id'}/>
+            </Group>
         </div>
     )
 }

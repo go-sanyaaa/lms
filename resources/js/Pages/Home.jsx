@@ -1,8 +1,8 @@
 import React, {useMemo, useState} from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head} from '@inertiajs/inertia-react';
-import {Breadcrumb, Button, Form, Progress, Select, Tabs} from "antd";
-import {EditOutlined, HomeOutlined} from "@ant-design/icons";
+import {Button, Form, Progress, Select, Tabs} from "antd";
+import {EditOutlined} from "@ant-design/icons";
 import t from 'prop-types'
 import LessonItem from "@/Components/Lessons/LessonItem";
 import {find, map, uniqBy} from "lodash";
@@ -12,6 +12,7 @@ import {Inertia} from "@inertiajs/inertia";
 import useRole from "@/helpers/useRole";
 import moment from "moment";
 import useObject from "@/helpers/useObject";
+import {Group, Panel, PanelHeader, PanelHeaderContent} from "@vkontakte/vkui";
 
 const filters = [
     {title: 'Все', func: () => true},
@@ -182,49 +183,42 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
     return (
         <AuthenticatedLayout
             auth={auth}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Список уроков</h2>}
         >
-            <Head title="Список уроков"/>
+            <Head title={course.title + '. Список уроков'}/>
+            <Panel>
+                <PanelHeader before={null}>
+                    <PanelHeaderContent
+                        status={'Курсы.'}
 
-            <div className="py-8">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className={'flex flex-col space-y-5'}>
-                        <Breadcrumb>
-                            <Breadcrumb.Item><HomeOutlined/></Breadcrumb.Item>
-                            <Breadcrumb.Item>{course.title}</Breadcrumb.Item>
-                        </Breadcrumb>
-
-                        <div>
-                            <div className={'rounded-md p-4 mt-3 bg-white'}>
-                                <span className={'text-gray-400 text-lg'}>Курс: </span> <br/>
-                                <h5 className={'font-bold text-2xl'}>
-                                    {course.title}
-                                </h5>
-
-                                <div dangerouslySetInnerHTML={{__html: course.content}} className={'content'}/>
-
-                                {isController ? (
-                                    <div className={'mt-4 pt-4 border-0 border-t border-solid border-gray-200'}>
-                                        <Button onClick={() => Inertia.visit(route('course.edit', 1))}
-                                                icon={<EditOutlined/>}>Редактировать</Button>
-                                    </div>
-                                ) : isStudent && (
-                                    <>
-                                        <span className={'text-gray-400'}>Прогресс:</span> <br/>
-                                        <span
-                                            className={'font-bold'}>Завершено {completedCount} из {lessons.length}</span>
-                                        <Progress className={'w-full'} showInfo={false}
-                                                  percent={completedCount * 100 / lessons.length}/>
-                                    </>
-                                )}
+                    >
+                        {course.title}
+                    </PanelHeaderContent>
+                </PanelHeader>
+                <Group>
+                    <div className={'rounded-md p-4 bg-white'}>
+                        <div dangerouslySetInnerHTML={{__html: course.content}} className={'content'}/>
+                        {isController ? (
+                            <div className={'mt-4 pt-4 border-0 border-t border-solid border-gray-200'}>
+                                <Button onClick={() => Inertia.visit(route('course.edit', 1))}
+                                        icon={<EditOutlined/>}>Редактировать</Button>
                             </div>
-                        </div>
-
-                        <Tabs items={tabs}/>
+                        ) : isStudent && (
+                            <>
+                                <span className={'text-gray-400'}>Прогресс:</span> <br/>
+                                <span
+                                    className={'font-bold'}>Завершено {completedCount} из {lessons.length}</span>
+                                <Progress className={'w-full'} showInfo={false}
+                                          percent={completedCount * 100 / lessons.length}/>
+                            </>
+                        )}
                     </div>
-                </div>
-            </div>
+                </Group>
+                <Group>
+                    <Tabs items={tabs}/>
+                </Group>
+            </Panel>
         </AuthenticatedLayout>
+
     );
 }
 

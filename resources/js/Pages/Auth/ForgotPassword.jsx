@@ -31,7 +31,7 @@ export default function ForgotPassword({status}) {
                                placeholder={'Электронная почта'}/>
                     </FormItem>
 
-                    <Div className="flex w-full items-center justify-between">
+                    <Div className="flex w-full box-border items-center justify-between">
                         <Button onClick={() => Inertia.visit(route('login'))} before={<Icon16ArrowLeftOutline/>}
                                 disabled={processing}>
                             Вернуться к авторизации

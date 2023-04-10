@@ -1,78 +1,78 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head, useForm} from '@inertiajs/inertia-react';
-import {Breadcrumb, Button, Form, Input} from "antd";
-import {ArrowLeftOutlined, HomeOutlined, PlusOutlined, SaveOutlined} from "@ant-design/icons";
+import {PlusOutlined} from "@ant-design/icons";
 import t from 'prop-types'
 import InputTextEditor from "@/Components/InputTextEditor/InputTextEditor";
 import LessonsTable from "@/Components/Lessons/LessonsTable";
 import useToggleState from "@/helpers/useToggleState";
-import LessonDrawer from "@/Components/Lessons/LessonDrawer";
+import {Button, Div, FormItem, FormLayout, Group, Input, Panel, PanelHeader, PanelHeaderContent} from "@vkontakte/vkui";
+import {Icon16AddCircle, Icon16ArrowLeftOutline} from "@vkontakte/icons";
 
 const Course = ({auth, course}) => {
-    const {put, processing, setData, errors} = useForm('Course', {
+    const {processing, setData, errors, data: form, put} = useForm('Course', {
         title: course.title,
         content: course.content
     })
 
-    const [showAddDrawer, ,toggleAddDrawer] = useToggleState(false)
+    const [showAddDrawer, , toggleAddDrawer] = useToggleState(false)
 
     const {lessons} = course
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
         put(route('course.update', course.id), {preserveState: false, preserveScroll: true})
     }
 
     return (
         <AuthenticatedLayout
             auth={auth}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Список уроков</h2>}
         >
             <Head>
                 <title>{course.title}</title>
             </Head>
 
-            <div className="py-8">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className={'flex flex-col space-y-5'}>
-                        <Breadcrumb>
-                            <Breadcrumb.Item><HomeOutlined/></Breadcrumb.Item>
-                            <Breadcrumb.Item>{course.title}</Breadcrumb.Item>
-                        </Breadcrumb>
+            <Panel>
+                <PanelHeader before={null}>
+                    <PanelHeaderContent
+                        status={'Курсы.'}
 
-                        <div>
-                            <div className={'rounded-md p-4 mt-3 bg-white'}>
-                                <span className={'text-gray-400 text-lg flex mb-2'}>Информация о курсе: </span>
-                                <Form onValuesChange={(_, values) => setData(values)} initialValues={course} className={'grid grid-cols-2'} layout={"vertical"}>
-                                    <Form.Item label={'Название'} name={'title'} validateStatus={errors.title && 'error'} help={errors.title}>
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item className={'col-span-2'} label={'Описание'} name={'content'}
-                                               validateStatus={errors.content && 'error'} help={errors.content}>
-                                        <InputTextEditor/>
-                                    </Form.Item>
-                                </Form>
-                                <div className={'space-x-4 flex'}>
-                                    <Button disabled={processing} href={route('home')}
-                                            icon={<ArrowLeftOutlined/>}>Вернуться</Button>
-                                    <Button loading={processing} onClick={handleSubmit} type={'primary'}
-                                            icon={<SaveOutlined/>}>Сохранить</Button>
-                                </div>
-                            </div>
-
-                            <div className={'flex p-4 bg-white mt-4 rounded-md flex flex-col'}>
-                                <div className={'mb-2 flex justify-between items-center'}>
-                                    <span className={'text-gray-400 text-lg flex'}>Уроки: </span>
-                                    <Button onClick={toggleAddDrawer} type={'dashed'} icon={<PlusOutlined/>}>Добавить урок</Button>
-                                </div>
-                                <LessonDrawer visible={showAddDrawer} courseId={course.id} onClose={toggleAddDrawer}/>
-
-                                <LessonsTable lessons={lessons}/>
-                            </div>
+                    >
+                        {course.title}
+                    </PanelHeaderContent>
+                </PanelHeader>
+                <Group>
+                    <FormLayout onSubmit={handleSubmit}>
+                        <FormItem top={'Название'} name={'title'}
+                                  status={errors.title ? 'error' : ''} bottom={errors.title}>
+                            <Input value={form.title} onChange={(e) => setData('title', e.target.value)}/>
+                        </FormItem>
+                        <FormItem className={'col-span-2'} top={'Описание'} name={'content'}
+                                  status={errors.content ? 'error' : ''} bottom={errors.content}>
+                            <InputTextEditor value={form.content}/>
+                        </FormItem>
+                        <Div className={'space-x-4 flex'}>
+                            <Button disabled={processing} mode={'secondary'} href={route('home')}
+                                    before={<Icon16ArrowLeftOutline/>}>Вернуться</Button>
+                            <Button loading={processing} type={'submit'}>Сохранить</Button>
+                        </Div>
+                    </FormLayout>
+                </Group>
+                <Group>
+                    <Div className={'flex rounded-md flex flex-col'}>
+                        <div className={'mb-4 flex justify-between items-center'}>
+                            <span className={'text-lg flex'}>Уроки: </span>
+                            <Button mode={'outline'} after={<Icon16AddCircle/>}
+                                    icon={<PlusOutlined/>}>
+                                Добавить урок
+                            </Button>
                         </div>
-                    </div>
-                </div>
-            </div>
+
+                        <LessonsTable lessons={lessons}/>
+                    </Div>
+                </Group>
+            </Panel>
         </AuthenticatedLayout>
     );
 }

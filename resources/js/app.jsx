@@ -1,7 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
 import './Components/InputTextEditor/styles.css'
-import 'antd/dist/antd.variable.less';
+// import 'antd/dist/antd.variable.less';
 import '@vkontakte/vkui/dist/vkui.css'
 
 import React from 'react';
@@ -12,7 +12,6 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import 'moment/dist/locale/ru'
 import {AdaptivityProvider, AppRoot, ConfigProvider, WebviewType} from "@vkontakte/vkui";
 
-
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
@@ -22,9 +21,9 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <ConfigProvider webviewType={WebviewType.INTERNAL} platform={'vkcom'}>
+            <ConfigProvider platform={'android'} webviewType={WebviewType.INTERNAL}>
                 <AdaptivityProvider>
-                    <AppRoot mode={'partial'}>
+                    <AppRoot>
                         <App {...props} />
                     </AppRoot>
                 </AdaptivityProvider>

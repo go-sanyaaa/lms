@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::prefix('/courses')->group(static function () {
         Route::get('{course}/edit', [CourseController::class, 'edit'])->name('course.edit');
-        Route::put('{course}/update', [CourseController::class, 'update'])->name('course.update');
+        Route::put('{course}/edit', [CourseController::class, 'update'])->name('course.update');
 
         Route::post('{course}/lessons', [LessonController::class, 'store'])->name('lesson.store');
     });

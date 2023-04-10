@@ -1,7 +1,7 @@
 import React from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import {Head, useForm} from '@inertiajs/inertia-react';
-import {Button, Checkbox, Div, FormItem, FormLayout, Group, Input} from "@vkontakte/vkui";
+import {Button, Checkbox, FormItem, FormLayout, Group, Input} from "@vkontakte/vkui";
 import {Inertia} from "@inertiajs/inertia";
 import {Icon16DoorEnterArrowRightOutline} from "@vkontakte/icons";
 
@@ -24,7 +24,7 @@ export default function Login({status}) {
             {status && <div className="mb-4 font-medium text-sm text-green-600 text-center">{status}</div>}
             <div className={'flex flex-col items-center justify-center'}>
                 <Group className={'max-w-md w-full'}>
-                    <Div className={'w-full border rounded-md'}>
+                    <div className={'w-full border rounded-md'}>
                         <FormLayout onSubmit={submit}
                                     layout={'vertical'}>
                             <FormItem status={errors.email ? 'error' : ''} bottom={errors.email} name={'email'}
@@ -52,7 +52,7 @@ export default function Login({status}) {
                                     ?</Button>
                             </FormItem>
                         </FormLayout>
-                    </Div>
+                    </div>
                 </Group>
             </div>
         </GuestLayout>
