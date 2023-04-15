@@ -2,6 +2,7 @@ import {Avatar} from "antd";
 import React from "react";
 import {Inertia} from "@inertiajs/inertia";
 import HomeworkStatusBlock from "@/Components/Homeworks/HomeworkStatusBlock";
+import {Cell} from "@vkontakte/vkui";
 
 const LessonItem = ({lesson}) => {
 
@@ -10,7 +11,7 @@ const LessonItem = ({lesson}) => {
     }
 
     return (
-        <div className={lesson.available ? 'cursor-pointer' : 'cursor-not-allowed'} onClick={lesson.available && handleOpen} key={lesson.id}>
+        <Cell className={lesson.available ? 'cursor-pointer' : 'cursor-not-allowed'} onClick={lesson.available && handleOpen} key={lesson.id}>
             <div
                 className={`course-list-item ${lesson?.homework?.status && `course-list-item--${lesson?.homework?.status.key}`} flex justify-between ${!lesson.available && 'course-list-item--disabled'}`}>
                 <div className={'flex items-center space-x-3'}>
@@ -32,7 +33,7 @@ const LessonItem = ({lesson}) => {
                     <HomeworkStatusBlock homework={lesson.homework}/>
                 </div>
             </div>
-        </div>
+        </Cell>
     )
 }
 

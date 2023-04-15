@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,7 +39,7 @@ class StudentController extends Controller
             )
             ->with(['mentor'])
             ->withCount(['homeworks', 'completedHomeworks'])
-            ->get();
+            ->paginate();
 
         return Inertia::render('Students/StudentsPage')
             ->with([

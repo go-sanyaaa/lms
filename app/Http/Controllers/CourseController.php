@@ -45,14 +45,14 @@ class CourseController extends Controller
                     ->orWhereHas('user.mentor.headUsers', fn($q) => $q->where('id', '=', $user->id))
                 )
                 ->with(['lesson', 'status', 'user', 'auditor'])
-                ->get()
+                ->paginate()
             : Homework::query()
                 ->where(fn(Builder $q) => $q
                     ->where('auditor_id', $user->id)
                     ->orWhereHas('user.headUsers', fn($q) => $q->where('id', '=', $user->id))
                 )
                 ->with(['lesson', 'status', 'user', 'auditor'])
-                ->get();
+                ->paginate();
 
         return Inertia::render('Home', [
             'course' => CourseResource::make($course),
