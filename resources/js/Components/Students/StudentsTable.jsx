@@ -40,22 +40,8 @@ const StudentsTable = ({students, onOpen}) => {
         },
         {
             title: 'ФИО',
+            width: 260,
             dataIndex: ['name'],
-        },
-        {
-            title: 'ДЗ / Выполнено',
-            align: 'center',
-            dataIndex: ['homeworks'],
-            width: 160,
-            sorter: (a, b) => {
-                return  a.homeworks.all - b.homeworks.all
-            },
-            render: (hw) => (
-                <div>
-                    <span className={'text-sm text-gray-700 font-bold'}>{hw.all}</span> / <span
-                    className={'text-sm text-gray-700 font-bold'}>{hw.completed}</span>
-                </div>
-            )
         },
         {
             title: 'Преподаватель',
@@ -71,12 +57,17 @@ const StudentsTable = ({students, onOpen}) => {
             )
         },
         {
-            title: '',
-            align: 'right',
-            width: 60,
-            render: (_, student) => (
+            title: 'ДЗ / Выполнено',
+            align: 'center',
+            dataIndex: ['homeworks'],
+            width: 160,
+            sorter: (a, b) => {
+                return  a.homeworks.all - b.homeworks.all
+            },
+            render: (hw) => (
                 <div>
-                    <Button onClick={() => onOpen(student)} icon={<EyeOutlined/>}/>
+                    <span className={'text-sm text-gray-700 font-bold'}>{hw.all}</span> / <span
+                    className={'text-sm text-gray-700 font-bold'}>{hw.completed}</span>
                 </div>
             )
         }
@@ -132,7 +123,9 @@ const StudentsTable = ({students, onOpen}) => {
                         </div>
                     </div>
                     <SetMentorModal students={selectedRowKeys} open={showModal} onCancel={toggleShowModal}/>
-                    <Table bordered rowSelection={rowSelection} columns={columns} dataSource={filteredStudents} rowKey={'id'}/>
+                    <Table className={'cursor-pointer'} bordered onRow={(student) => ({
+                        onClick: () => onOpen(student)
+                    })} rowSelection={rowSelection} columns={columns} dataSource={filteredStudents} rowKey={'id'}/>
                 </Div>
             </Group>
         </div>

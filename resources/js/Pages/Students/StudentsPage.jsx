@@ -32,8 +32,6 @@ const StudentsPage = ({auth, students}) => {
                     </PanelHeader>
                     <StudentsTable onOpen={handleShowStudent}
                                    students={students.data}/>
-                    <StudentDrawer studentId={showStudentId} onClose={() => setShowStudentId(undefined)}
-                                   open={!!showStudentId}/>
                 </Panel>
                 <ShowStudentPanel id={'show'} studentId={showStudentId} onClose={handleCloseStudent}/>
             </View>
