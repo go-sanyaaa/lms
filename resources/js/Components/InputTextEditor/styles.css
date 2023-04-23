@@ -1,12 +1,11 @@
 .input-text-editor > div:focus {
-    border-color: #12b981;
-    box-shadow: 0 0 0 2px rgb(18 185 129 / 20%);
+    border-color: var(--vkui--color_stroke_accent) !important;
     border-right-width: 1px !important;
     outline: 0;
 }
 
 .input-text-editor > div:hover {
-    border-color: #12b981;
+    border-color: var(--vkui--color_field_border_alpha--hover);
 }
 
 .input-text-editor iframe, .content iframe {
@@ -15,9 +14,10 @@
 }
 
 .input-text-editor > div {
+    background-color: var(--vkui--color_field_background);
     padding: 4px 11px;
-    border: 1px solid #d9d9d9;
-    border-radius: 0.325rem;
+    border: 1px solid var(--vkui--color_field_border_alpha);
+    border-radius: var(--vkui--size_border_radius--regular);
     line-height: 1.5715;
     vertical-align: bottom;
     transition: all 0.3s, height 0s;

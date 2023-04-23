@@ -6,7 +6,18 @@ import t from 'prop-types'
 import InputTextEditor from "@/Components/InputTextEditor/InputTextEditor";
 import LessonsTable from "@/Components/Lessons/LessonsTable";
 import useToggleState from "@/helpers/useToggleState";
-import {Button, Div, FormItem, FormLayout, Group, Input, Panel, PanelHeader, PanelHeaderContent} from "@vkontakte/vkui";
+import {
+    Button, Caption,
+    Div,
+    FormItem,
+    FormLayout,
+    Group,
+    Headline,
+    Input,
+    Panel,
+    PanelHeader,
+    PanelHeaderContent
+} from "@vkontakte/vkui";
 import {Icon16AddCircle, Icon16ArrowLeftOutline} from "@vkontakte/icons";
 
 const Course = ({auth, course}) => {
@@ -36,10 +47,10 @@ const Course = ({auth, course}) => {
             <Panel>
                 <PanelHeader before={null}>
                     <PanelHeaderContent
-                        status={'Курсы.'}
-
+                        status={<Caption style={{color: 'var(--vkui--color_link_contrast--hover)'}}>Курсы.</Caption>}
                     >
-                        {course.title}
+                        <Headline style={{color: 'var(--vkui--color_text_contrast)'}} level={1}
+                                  weight={2}>{course.title}</Headline>
                     </PanelHeaderContent>
                 </PanelHeader>
                 <Group>
@@ -50,7 +61,7 @@ const Course = ({auth, course}) => {
                         </FormItem>
                         <FormItem className={'col-span-2'} top={'Описание'} name={'content'}
                                   status={errors.content ? 'error' : ''} bottom={errors.content}>
-                            <InputTextEditor value={form.content}/>
+                            <InputTextEditor value={form.content} onChange={(e) => setData('content', e)}/>
                         </FormItem>
                         <Div className={'space-x-4 flex'}>
                             <Button disabled={processing} mode={'secondary'} href={route('home')}

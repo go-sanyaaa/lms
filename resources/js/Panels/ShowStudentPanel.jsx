@@ -76,9 +76,9 @@ const ShowStudentPanel = ({id, onClose, studentId}) => {
             <PanelHeader before={onClose && <PanelHeaderBack onClick={onClose}/>}>
                 {!loading && (
                     <PanelHeaderContent status={
-                        (<Caption style={{color: 'var(--vkui--color_link_contrast--hover)'}}>{student.email}</Caption>)
+                        <Caption style={{color: 'var(--vkui--color_link_contrast--hover)'}}>{student.email}</Caption>
                     }>
-                        <Headline style={{color: 'var(--vkui--color_text_contrast)'}} level={2}
+                        <Headline style={{color: 'var(--vkui--color_text_contrast)'}} level={1}
                                   weight={2}>{initialData?.surname} {initialData.name}</Headline>
                     </PanelHeaderContent>
                 )}
