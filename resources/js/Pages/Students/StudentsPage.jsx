@@ -18,7 +18,6 @@ const StudentsPage = ({auth, students}) => {
 
     const handleCloseStudent = () => {
         setActivePanel('students')
-        setShowStudentId(null)
     }
 
     return (
