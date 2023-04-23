@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.vkuiPanelHeader__in{
+    background: #8FD01A !important;
+}
+
 @layer components {
     .filter-button {
         @apply bg-white px-4 py-2 flex rounded-md shadow-2xl shadow-neutral-50 hover:shadow-2xl cursor-pointer transition;

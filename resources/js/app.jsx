@@ -1,8 +1,11 @@
 import './bootstrap';
 import '../css/app.css';
 import './Components/InputTextEditor/styles.css'
-import '@vkontakte/vkui/dist/vkui.css'
-import 'antd/dist/antd.variable.less';
+// import '@vkontakte/vkui/dist/vkui.css'
+// import 'antd/dist/antd.variable.less';
+import '@vkontakte/vkui/dist/components.css'
+
+import './vkBase/index.css'
 
 import React from 'react';
 import {createRoot} from 'react-dom/client';

@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import StudentsTable from "@/Components/Students/StudentsTable";
 import StudentDrawer from "@/Components/Students/StudentDrawer";
-import {Panel, PanelHeader, PanelHeaderBack, View} from "@vkontakte/vkui";
+import {Panel, PanelHeader, PanelHeaderBack, Title, View} from "@vkontakte/vkui";
 import ShowStudentPanel from "@/Panels/ShowStudentPanel";
 
 const StudentsPage = ({auth, students}) => {
@@ -29,7 +29,7 @@ const StudentsPage = ({auth, students}) => {
             <View activePanel={activePanel}>
                 <Panel id={'students'}>
                     <PanelHeader before={null}>
-                        Студенты
+                        <Title level={2} weight={2} style={{color: 'var(--vkui--color_text_contrast)'}}>Студенты</Title>
                     </PanelHeader>
                     <StudentsTable onOpen={handleShowStudent}
                                    students={students.data}/>

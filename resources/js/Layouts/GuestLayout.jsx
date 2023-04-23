@@ -11,7 +11,7 @@ export default function Guest({children}) {
                         <ApplicationLogo className="w-20 h-20 fill-current text-gray-500"/>
                     </Link>
                     <span style={{color: 'var(--vkui--color_text_primary)'}} className={'text-2xl text-center'}>
-                    Цифровая платформа обучения
+                    Profline
                 </span>
                 </div>
 

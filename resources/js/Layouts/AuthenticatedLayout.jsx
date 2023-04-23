@@ -5,7 +5,7 @@ import {message} from "antd";
 import useRole from "@/helpers/useRole";
 import {
     Avatar,
-    Button,
+    Button, Caption,
     Cell,
     Group,
     Panel,
@@ -14,7 +14,7 @@ import {
     RichCell,
     Separator,
     SplitCol,
-    SplitLayout,
+    SplitLayout, Title,
     useAdaptivityConditionalRender,
     usePlatform
 } from "@vkontakte/vkui";
@@ -51,14 +51,14 @@ export default function Authenticated({auth, children}) {
     return (
         <SplitLayout
             style={{justifyContent: 'center'}}
-            header={!isVKCOM && <PanelHeader separator={false}/>}
+            header={!isVKCOM && <PanelHeader className={'main-header'} separator={false}/>}
         >
             {viewWidth.tabletPlus && (
                 <SplitCol animate={true} className={viewWidth.tabletPlus.className} fixed width={280} maxWidth={280}>
                     <Panel>
                         {!isVKCOM && (
-                            <PanelHeader before={<ApplicationLogo/>}>
-                                <span>LMS</span>
+                            <PanelHeader>
+                                <Title style={{color: 'var(--vkui--color_text_contrast)'}}>Profline</Title>
                             </PanelHeader>
                         )}
                         <Group>

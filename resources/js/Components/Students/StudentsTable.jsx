@@ -1,31 +1,32 @@
-import {Button, Form, Select, Table, Radio} from "antd";
+import {Table, Radio} from "antd";
 import {EyeOutlined, FileExcelOutlined} from "@ant-design/icons";
 import React, {useMemo, useState} from "react";
 import SetMentorModal from "@/Components/Students/SetMentorModal";
 import useToggleState from "@/helpers/useToggleState";
 import {usePage} from "@inertiajs/inertia-react";
-import {Group} from "@vkontakte/vkui";
+import {FormItem, FormLayout, Group, SegmentedControl, Title, Button, Select, Div} from "@vkontakte/vkui";
 
 const StudentsTable = ({students, onOpen}) => {
-    const [showModal,,toggleShowModal] = useToggleState(false)
+    const [showModal, , toggleShowModal] = useToggleState(false)
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-    const [filters, setFilters] = useState({
-        mentor: null,
-        homework: 'all'
-    })
+    const [mentor, setMentor] = useState(null)
+    const [homework, setHomework] = useState('all')
 
     const filteredStudents = useMemo(() =>
-        students
-            ?.filter(filters?.mentor ? (hw) => filters.mentor === hw?.mentor?.id : () => true)
-            ?.filter((() => {
-                switch (filters.homework) {
-                    case "have": return (student) => student.homeworks.all > 0
-                    case "null": return (student) => student.homeworks.all === 0
-                    default : return () => true
-                }
-            })())
-    , [students, filters])
+            students
+                ?.filter(mentor ? (hw) => +mentor === hw?.mentor?.id : () => true)
+                ?.filter((() => {
+                    switch (homework) {
+                        case "have":
+                            return (student) => student.homeworks.all > 0
+                        case "null":
+                            return (student) => student.homeworks.all === 0
+                        default :
+                            return () => true
+                    }
+                })())
+        , [students, mentor, homework])
 
     const {common} = usePage().props
 
@@ -97,34 +98,42 @@ const StudentsTable = ({students, onOpen}) => {
     return (
         <div>
             <Group>
-                <span className={'text-lg mb-2 flex'}>Фильтры: </span>
-                <Form onValuesChange={(_,filters) => setFilters(filters)} layout={'vertical'} className={'grid grid-cols-4'}>
-                    <Form.Item initialValue={'all'} name={'homework'} label={'Наличие ДЗ'}>
-                        <Radio.Group buttonStyle="solid">
-                            <Radio.Button value="all">Все</Radio.Button>
-                            <Radio.Button value="have">Есть</Radio.Button>
-                            <Radio.Button value="null">Отсутствует</Radio.Button>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item name={'mentor'} label={'Преподаватель'}>
-                        <Select allowClear placeholder={'Выберите преподавателя'} className={'w-full'} showSearch optionFilterProp={'children'}>
-                            {common?.mentors?.map(mentor => (
-                                <Select.Option value={mentor.id} key={mentor.id}>{mentor.name}</Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </Form>
+                <FormLayout className={'grid grid-cols-2'}>
+                    <FormItem initialValue={'all'} name={'homework'} top={'Наличие ДЗ'}
+                              onChange={(e) => setHomework(e.target.value)}
+                    >
+                        <SegmentedControl options={[
+                            {label: 'Все', value: 'all'},
+                            {label: 'Есть', value: 'have'},
+                            {label: 'Отсутствует', value: 'null'},
+                        ]}/>
+                    </FormItem>
+                    <FormItem name={'mentor'} top={'Преподаватель'}
+                              onChange={(e) => setMentor(e.target.value)}
+                    >
+                        <Select placeholder={'Выберите преподавателя'}
+                                searchable allowClearButton
+                                options={common?.mentors?.map((m) => ({
+                                    label: m.name,
+                                    value: m.id,
+                                }))}
+                        />
+                    </FormItem>
+                </FormLayout>
             </Group>
             <Group>
-            <div className={'flex mb-3 justify-between'}>
-                <Button onClick={toggleShowModal} disabled={!selectedRowKeys.length}>Назначить преподавателя</Button>
-                <div className="flex space-x-3">
-                    <Button onClick={handleExport} icon={<FileExcelOutlined/>}>Отчет по ДЗ</Button>
-                    <Button onClick={handleExportStudents} icon={<FileExcelOutlined/>}>Отчет по Студентам</Button>
-                </div>
-            </div>
-            <SetMentorModal students={selectedRowKeys} open={showModal} onCancel={toggleShowModal}/>
-                <Table bordered rowSelection={rowSelection} columns={columns} dataSource={filteredStudents} rowKey={'id'}/>
+                <Div>
+                    <div className={'flex mb-3 justify-between'}>
+                        <Button onClick={toggleShowModal} mode={'outline'} disabled={!selectedRowKeys.length}>Назначить
+                            преподавателя</Button>
+                        <div className="flex space-x-3">
+                            <Button onClick={handleExport} mode={'secondary'} before={<FileExcelOutlined/>}>Отчет по ДЗ</Button>
+                            <Button onClick={handleExportStudents} mode={'secondary'} before={<FileExcelOutlined/>}>Отчет по Студентам</Button>
+                        </div>
+                    </div>
+                    <SetMentorModal students={selectedRowKeys} open={showModal} onCancel={toggleShowModal}/>
+                    <Table bordered rowSelection={rowSelection} columns={columns} dataSource={filteredStudents} rowKey={'id'}/>
+                </Div>
             </Group>
         </div>
     )
