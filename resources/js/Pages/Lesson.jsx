@@ -90,7 +90,7 @@ export default function Lesson(props) {
                                     <div className={'mt-4 pt-4 border-0 border-t border-solid border-gray-200'}>
                                         <Button onClick={toggleEditDrawer} icon={<EditOutlined/>}>Редактировать</Button>
                                         <LessonDrawer lesson={lesson} onClose={toggleEditDrawer}
-                                                      visible={showEditDrawer}/>
+                                                      open={showEditDrawer}/>
                                     </div>
                                 )}
                             </div>

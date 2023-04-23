@@ -2,8 +2,18 @@ import './bootstrap';
 import '../css/app.css';
 import './Components/InputTextEditor/styles.css'
 // import '@vkontakte/vkui/dist/vkui.css'
-// import 'antd/dist/antd.variable.less';
 import '@vkontakte/vkui/dist/components.css'
+import {ConfigProvider as AntdConfigProvider} from 'antd';
+import 'moment/dist/locale/ru'
+import ru from 'antd/es/locale/ru_RU'
+
+const theme = {
+    token: {
+        colorPrimary: "#f46405",
+        colorInfo: "#f46405",
+        borderRadius: 8,
+        wireframe: true}
+}
 
 import './vkBase/index.css'
 
@@ -27,7 +37,9 @@ createInertiaApp({
             <ConfigProvider platform={'android'} webviewType={WebviewType.INTERNAL}>
                 <AdaptivityProvider>
                     <AppRoot>
-                        <App {...props} />
+                        <AntdConfigProvider theme={theme}>
+                            <App {...props} />
+                        </AntdConfigProvider>
                     </AppRoot>
                 </AdaptivityProvider>
             </ConfigProvider>

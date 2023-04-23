@@ -8,7 +8,7 @@ import InputAttachments from "@/Components/InputAttachments";
 import {SaveOutlined} from "@ant-design/icons";
 import useRole from "@/helpers/useRole";
 
-const LessonDrawer = ({lesson, onClose, visible, courseId}) => {
+const LessonDrawer = ({lesson, onClose, open, courseId}) => {
     const [form] = Form.useForm()
 
     const {setData, put, processing, errors, post, reset, clearErrors} = useForm('LessonEdit', {
@@ -21,13 +21,13 @@ const LessonDrawer = ({lesson, onClose, visible, courseId}) => {
     const {isController} = useRole()
 
     useEffect(() => {
-        if (visible) {
+        if (open) {
             form.resetFields()
         } else {
             reset()
             clearErrors()
         }
-    }, [visible])
+    }, [open])
 
     useEffect(() => {
         setData({
@@ -48,7 +48,7 @@ const LessonDrawer = ({lesson, onClose, visible, courseId}) => {
     }
 
     return (
-        <Drawer width={600} open={visible} centered onClose={onClose} closable={false}
+        <Drawer width={600} open={open} centered onClose={onClose} closable={false}
                 title={(
                     <div className={'flex justify-between'}>
                         <span>{lesson ? 'Редактирование урока:' : 'Создание урока'}</span>
@@ -85,7 +85,7 @@ const LessonDrawer = ({lesson, onClose, visible, courseId}) => {
 
 LessonDrawer.propTypes = {
     lesson: LessonType,
-    visible: t.bool,
+    open: t.bool,
     onClose: t.func,
     courseId: t.number
 }
