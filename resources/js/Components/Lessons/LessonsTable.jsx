@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import t from "prop-types"
 import {LessonType} from "@/Types/LessonType";
-import {Avatar, IconButton, RichCell} from "@vkontakte/vkui";
+import {Avatar, Caption, Cell, IconButton, Subhead} from "@vkontakte/vkui";
 import {Icon16PenOutline} from "@vkontakte/icons";
 import LessonDrawer from "@/Components/Lessons/LessonDrawer";
 
@@ -12,11 +12,16 @@ const LessonsTable = ({lessons}) => {
         <>
             <div className={'space-y-1'}>
                 {lessons.map(lesson => (
-                    <RichCell key={lesson.id} disabled className={'odd:bg-gray-100'}
-                              after={<IconButton onClick={() => setSelectedLesson(lesson)}><Icon16PenOutline/></IconButton>} subhead={lesson.description}
-                              before={<Avatar initials={lesson.id}/>}>
-                        {lesson.title}
-                    </RichCell>
+                    <Cell key={lesson.id} disabled className={'odd:bg-gray-100'}
+                          after={<IconButton onClick={() => setSelectedLesson(lesson)}><Icon16PenOutline/></IconButton>}
+                          before={<Avatar initials={lesson.id}/>}>
+                        <div className={'flex flex-col'}>
+                            <Subhead weight="3" className={'text-gray-500'}>{lesson.description}</Subhead>
+                            <span>
+                            {lesson.title}
+                        </span>
+                        </div>
+                    </Cell>
                 ))}
                 <LessonDrawer open={!!selectedLesson} lesson={selectedLesson}
                               onClose={() => setSelectedLesson(null)}/>
