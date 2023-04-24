@@ -19,6 +19,7 @@ import {
     PanelHeaderContent
 } from "@vkontakte/vkui";
 import {Icon16AddCircle, Icon16ArrowLeftOutline} from "@vkontakte/icons";
+import LessonDrawer from "@/Components/Lessons/LessonDrawer";
 
 const Course = ({auth, course}) => {
     const {processing, setData, errors, data: form, put} = useForm('Course', {
@@ -75,7 +76,8 @@ const Course = ({auth, course}) => {
                         <div className={'mb-4 flex justify-between items-center'}>
                             <span className={'text-lg flex'}>Уроки: </span>
                             <Button mode={'outline'} after={<Icon16AddCircle/>}
-                                    icon={<PlusOutlined/>}>
+                                    icon={<PlusOutlined/>} onClick={toggleAddDrawer}
+                            >
                                 Добавить урок
                             </Button>
                         </div>
@@ -84,6 +86,8 @@ const Course = ({auth, course}) => {
                     </Div>
                 </Group>
             </Panel>
+
+            <LessonDrawer open={showAddDrawer} onClose={toggleAddDrawer} courseId={course.id}/>
         </AuthenticatedLayout>
     );
 }

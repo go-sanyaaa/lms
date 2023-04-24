@@ -12,16 +12,16 @@ import useRole from "@/helpers/useRole";
 import moment from "moment";
 import useObject from "@/helpers/useObject";
 import {
-    Button,
+    Button, Caption,
     FormItem,
     FormLayout,
-    Group,
+    Group, Headline,
     HorizontalScroll,
     Panel,
     PanelHeader,
     PanelHeaderContent,
     Tabs,
-    TabsItem
+    TabsItem, Title
 } from "@vkontakte/vkui";
 import {Icon16PenOutline} from "@vkontakte/icons";
 import {ChipsSelect} from "@vkontakte/vkui/dist/components/ChipsSelect/ChipsSelect";
@@ -68,7 +68,7 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
 
     const filteredLessons = useMemo(() => extLessons.filter(filter.func), [extLessons, filter])
 
-    const students = uniqBy(map(tasks.data, 'author'), 'id')
+    const students = uniqBy(map(tasks, 'author'), 'id')
 
     const statuses = Object.keys(HomeworkStatus).map(key => HomeworkStatus[key])
 
@@ -93,7 +93,7 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                 }))
             }
 
-            const filteredTasks = tasks.data
+            const filteredTasks = tasks
                 .filter(hwFilters.mentor ? (hw) => hw.auditor.id === hwFilters.mentor : () => true)
                 .filter(hwFilters.student ? (hw) => hw.author.id === hwFilters.student : () => true)
                 .filter(hwFilters.lesson ? (hw) => hw.lesson.id === hwFilters.lesson : () => true)
@@ -115,11 +115,9 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
             <Head title={course.title + '. Список уроков'}/>
             <Panel>
                 <PanelHeader before={null}>
-                    <PanelHeaderContent
-                        status={'Курсы.'}
-
-                    >
-                        {course.title}
+                    <PanelHeaderContent>
+                        <Title style={{color: 'var(--vkui--color_text_contrast)'}} level={3}
+                                  weight={3}>{course.title}</Title>
                     </PanelHeaderContent>
                 </PanelHeader>
                 <Group>
@@ -194,7 +192,7 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                                 <HomeworkTasksTable
                                     // onSelectAuthor={handleSelectAuthor}
                                     // onSelectLesson={handleSelectLesson}
-                                    tasks={[]}
+                                    tasks={tasks}
                                 />
                             </div>
                         </div>

@@ -40,12 +40,12 @@ const MenuBar = ({editor}) => {
             <Button.Group>
                 <Button
                     onClick={() => editor.chain().focus().toggleBold().run()}
-                    type={editor.isActive('bold') ? 'primary' : ''}
+                    type={editor.isActive('bold') ? 'primary' : 'default'}
                     icon={<BoldOutlined/>}
                 />
                 <Button
                     onClick={() => editor.chain().focus().toggleItalic().run()}
-                    type={editor.isActive('italic') ? 'primary' : ''}
+                    type={editor.isActive('italic') ? 'primary' : 'default'}
                     icon={<ItalicOutlined/>}
                 />
             </Button.Group>
@@ -53,22 +53,22 @@ const MenuBar = ({editor}) => {
             <Button.Group>
                 <Button
                     onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
-                    type={editor.isActive('heading', {level: 1}) ? 'primary' : ''}
+                    type={editor.isActive('heading', {level: 1}) ? 'primary' : 'default'}
                     icon={'H1'}
                 />
                 <Button
                     onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}
-                    type={editor.isActive('heading', {level: 2}) ? 'primary' : ''}
+                    type={editor.isActive('heading', {level: 2}) ? 'primary' : 'default'}
                     icon={'H2'}
                 />
                 <Button
                     onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}
-                    type={editor.isActive('heading', {level: 3}) ? 'primary' : ''}
+                    type={editor.isActive('heading', {level: 3}) ? 'primary' : 'default'}
                     icon={'H3'}
                 />
                 <Button
                     onClick={() => editor.chain().focus().toggleHeading({level: 4}).run()}
-                    type={editor.isActive('heading', {level: 4}) ? 'primary' : ''}
+                    type={editor.isActive('heading', {level: 4}) ? 'primary' : 'default'}
                     icon={'H4'}
                 />
             </Button.Group>
@@ -76,12 +76,12 @@ const MenuBar = ({editor}) => {
             <Button.Group>
                 <Button
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    type={editor.isActive('bulletList') ? 'primary' : ''}
+                    type={editor.isActive('bulletList') ? 'primary' : 'default'}
                     icon={<UnorderedListOutlined/>}
                 />
                 <Button
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    type={editor.isActive('orderedList') ? 'primary' : ''}
+                    type={editor.isActive('orderedList') ? 'primary' : 'default'}
                     icon={<OrderedListOutlined/>}
                 />
             </Button.Group>
