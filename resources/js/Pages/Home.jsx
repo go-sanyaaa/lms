@@ -3,7 +3,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head} from '@inertiajs/inertia-react';
 import {Progress} from "antd";
 import t from 'prop-types'
-import LessonItem from "@/Components/Lessons/LessonItem";
 import {find, map, uniqBy} from "lodash";
 import {HomeworkStatus} from "@/constants/statuses";
 import HomeworkTasksTable from "@/Components/Homeworks/HomeworkTasksTable";
@@ -12,21 +11,27 @@ import useRole from "@/helpers/useRole";
 import moment from "moment";
 import useObject from "@/helpers/useObject";
 import {
+    Avatar,
     Button,
+    Cell,
+    Div,
     FormItem,
     FormLayout,
     Group,
     HorizontalScroll,
+    IconButton,
     Panel,
     PanelHeader,
-    PanelHeaderContent,
+    PanelHeaderContent, SegmentedControl,
     Select,
+    Subhead,
     Tabs,
     TabsItem,
     Title
 } from "@vkontakte/vkui";
 import {Icon16PenOutline} from "@vkontakte/icons";
-import {ChipsSelect} from "@vkontakte/vkui/dist/components/ChipsSelect/ChipsSelect";
+import HomeworkStatusBlock from "@/Components/Homeworks/HomeworkStatusBlock";
+import LessonItem from "@/Components/Lessons/LessonItem";
 
 const filters = [
     {title: 'Все', func: () => true},
@@ -45,7 +50,7 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
 
     const {mentors = []} = common
 
-    const [selectedTab, setSelectedTab] = useState('homeworks')
+    const [selectedTab, setSelectedTab] = useState('lessons')
 
     const {isStudent, isController, isManager} = useRole()
 
@@ -113,8 +118,6 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
             .filter(hwFilters.status ? (hw) => hw.status.id === +hwFilters.status : () => true)
 
     }, [hwFilters])
-
-    console.log(filteredTasks, tasks)
 
     return (
         <AuthenticatedLayout
@@ -194,32 +197,35 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                                     </FormItem>
                                 </FormLayout>
                             </Group>
-                            {/*<Group>*/}
-                            {/*    <div className={'flex p-4'}>*/}
                                     <HomeworkTasksTable
                                         // onSelectAuthor={handleSelectAuthor}
                                         // onSelectLesson={handleSelectLesson}
                                         tasks={filteredTasks}
                                     />
-                                {/*</div>*/}
-                            {/*</Group>*/}
                         </div>
                     )}
                     {selectedTab === 'lessons' && (
                         <>
                             {isStudent && (
-                                <div className={'flex space-x-3 mb-3'}>
-                                    {filters.map((f, index) => (
-                                        <div key={index} onClick={() => setFilter(f)}
-                                             className={`filter-button ${f === filter && 'filter-button--active'}`}>
-                                            {f.title} <span
-                                            className={`filter-button__counter ${f === filter && 'filter-button__counter--active'}`}>{extLessons.filter(f.func).length}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                                <Group className={'flex space-x-3 mb-3'}>
+                                    <SegmentedControl
+                                        className={'w-full'} size={'l'}
+                                        onChange={v => setFilter(v)}
+                                        options={filters.map((f) => ({
+                                            value: f,
+                                            label: (
+                                                <div className={'flex items-center'}>
+                                                    {f.title}
+                                                    <span
+                                                        className={`filter-button__counter`}>{extLessons.filter(f.func).length}</span>
+                                                </div>
+                                            )
+                                        }))}
+                                    />
+                                </Group>
                             )}
 
-                            <div className={'flex flex-col space-y-3'}>
+                            <div className={'space-y-2'}>
                                 {filteredLessons.map((lesson) => (
                                     <LessonItem key={lesson.index} lesson={lesson}/>
                                 ))}

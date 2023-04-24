@@ -24,7 +24,7 @@
     }
 
     .course-list-item {
-        @apply bg-white transition hover:shadow-2xl hover:shadow-gray-200 rounded-md flex justify-between items-center shadow-sm p-6;
+        @apply bg-white transition hover:bg-gray-50 rounded-md flex justify-between items-center shadow-sm p-6;
     }
 
     .course-list-item--disabled {
