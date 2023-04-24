@@ -39,20 +39,21 @@ const HomeworkTasksTable = ({tasks, onSelectAuthor, onSelectLesson}) => {
         {
             title: 'Урок',
             dataIndex: ['lesson'],
-            render: (lesson) => (
-                <div onClick={() => onSelectLesson(lesson)} className={'cursor-pointer hover:text-emerald-500 flex text-gray-400 flex-col'}>
+            width: 260,
+            render: (lesson, hw) => (
+                <div onClick={() => onSelectLesson(lesson)} className={'cursor-pointer hover:text-emerald-500 flex text-gray-400 flex-col items-start'}>
                     <span className={`text-sm font-medium text-gray-600`}>{lesson.title}</span>
-                    <span className={'text-xs'}>{lesson.description}</span>
+                    <span className={'text-xs mb-3'}>{lesson.description}</span>
+                    <HomeworkStatusBlock homework={hw}/>
                 </div>
             )
         },
         isController ? ({
             title: 'Преподаватель',
             dataIndex: ['auditor'],
-            width: 280,
+            width: 200,
             render: (auditor) => (
                 <div className={'flex items-center space-x-2'}>
-                    <Avatar size={24} icon={<UserOutlined/>}/>
                     <span className={`text-sm text-gray-600`}>{auditor?.surname} {auditor.name}</span>
                 </div>
             )
@@ -62,17 +63,8 @@ const HomeworkTasksTable = ({tasks, onSelectAuthor, onSelectLesson}) => {
             dataIndex: ['author'],
             render: (author) => (
                 <div onClick={() => onSelectAuthor(author)} className={'cursor-pointer hover:text-emerald-500 text-gray-600 flex items-center space-x-2'}>
-                    <Avatar size={24} icon={<UserOutlined/>}/>
                     <span className={`text-sm`}>{author.name}</span>
                 </div>
-            )
-        },
-        {
-            title: 'Статус',
-            dataIndex: ['status'],
-            width: 200,
-            render: (status, hw) => (
-                <HomeworkStatusBlock homework={hw}/>
             )
         },
         {

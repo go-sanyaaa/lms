@@ -12,16 +12,18 @@ import useRole from "@/helpers/useRole";
 import moment from "moment";
 import useObject from "@/helpers/useObject";
 import {
-    Button, Caption,
+    Button,
     FormItem,
     FormLayout,
-    Group, Headline,
+    Group,
     HorizontalScroll,
     Panel,
     PanelHeader,
     PanelHeaderContent,
+    Select,
     Tabs,
-    TabsItem, Title
+    TabsItem,
+    Title
 } from "@vkontakte/vkui";
 import {Icon16PenOutline} from "@vkontakte/icons";
 import {ChipsSelect} from "@vkontakte/vkui/dist/components/ChipsSelect/ChipsSelect";
@@ -33,10 +35,10 @@ const filters = [
 ]
 
 const initialFilters = {
-    mentor: [],
-    student: [],
-    lesson: [],
-    status: []
+    mentor: null,
+    student: null,
+    lesson: null,
+    status: null
 }
 export default function Home({auth, course, homeworks, tasks, common = {}}) {
     const {lessons} = course
@@ -93,12 +95,7 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                 }))
             }
 
-            const filteredTasks = tasks
-                .filter(hwFilters.mentor ? (hw) => hw.auditor.id === hwFilters.mentor : () => true)
-                .filter(hwFilters.student ? (hw) => hw.author.id === hwFilters.student : () => true)
-                .filter(hwFilters.lesson ? (hw) => hw.lesson.id === hwFilters.lesson : () => true)
-                .filter(hwFilters.status ? (hw) => hw.status.id === hwFilters.status : () => true)
-
+            const filteredTasks =
             tabs.push({
                 label: 'Задания на проверку',
                 key: 'homeworks'
@@ -107,6 +104,17 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
 
         return tabs
     }, [filteredLessons, filter, hwFilters])
+
+    const filteredTasks = useMemo(() => {
+        return tasks
+            .filter(hwFilters.mentor ? (hw) => hw.auditor.id === +hwFilters.mentor : () => true)
+            .filter(hwFilters.student ? (hw) => hw.author.id === +hwFilters.student : () => true)
+            .filter(hwFilters.lesson ? (hw) => hw.lesson.id === +hwFilters.lesson : () => true)
+            .filter(hwFilters.status ? (hw) => hw.status.id === +hwFilters.status : () => true)
+
+    }, [hwFilters])
+
+    console.log(filteredTasks, tasks)
 
     return (
         <AuthenticatedLayout
@@ -152,49 +160,49 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                             ))}
                         </HorizontalScroll>
                     </Tabs>
-
+                </Group>
+                <div>
                     {selectedTab === 'homeworks' && (
                         <div className={'flex flex-col'}>
-                            <div className={'mb-6 pb-1'}>
-                                <span className={'text-gray-400 text-lg mb-2 flex'}>Фильтры: </span>
+                            <Group>
                                 <FormLayout layout={'vertical'} className={'grid grid-cols-2 mb-4'}>
                                     {isController && (
                                         <FormItem top={'Преподователь'}>
-
-                                            <ChipsSelect options={[]} showSearch optionFilterProp={'children'}
-                                                         allowClear
-                                                         value={hwFilters.mentor}
-                                                         onChange={(value) => setHwFilterValue('mentor', value)}
-                                                         placeholder={'Не выбран'}/>
+                                            <Select options={mentors.map((m) => ({value: m.id, label: m.name}))}
+                                                    value={hwFilters.mentor} searchable allowClearButton
+                                                    onChange={(e) => setHwFilterValue('mentor', e.target.value)}
+                                                    placeholder={'Не выбран'}/>
                                         </FormItem>
                                     )}
                                     <FormItem top={'Студент'}>
-                                        <ChipsSelect options={[]} showSearch optionFilterProp={'children'} allowClear
-                                                     value={hwFilters.student}
-                                                     onChange={(value) => setHwFilterValue('student', value)}
+                                        <Select options={students.map((s) => ({value: s.id, label: s.name}))} searchable
+                                                     value={hwFilters.student} allowClearButton
+                                                     onChange={(e) => setHwFilterValue('student', e.target.value)}
                                                      placeholder={'Не выбран'}/>
                                     </FormItem>
                                     <FormItem top={'Урок'}>
-                                        <ChipsSelect options={[]} showSearch optionFilterProp={'children'} allowClear
-                                                     value={hwFilters.lesson}
-                                                     onChange={(value) => setHwFilterValue('lesson', value)}
+                                        <Select options={lessons.map(l => ({value: l.id, label: l.title}))}
+                                                     value={hwFilters.lesson} allowClearButton searchable
+                                                     onChange={(e) => setHwFilterValue('lesson', e.target.value)}
                                                      placeholder={'Не выбран'}/>
                                     </FormItem>
                                     <FormItem top={'Статус'}>
-                                        <ChipsSelect options={[]} showSearch optionFilterProp={'children'} allowClear
-                                                     value={hwFilters.status}
-                                                     onChange={(value) => setHwFilterValue('status', value)}
+                                        <Select options={statuses.map(s => ({value: s.id, label: s.title}))}
+                                                     value={hwFilters.status} allowClearButton searchable
+                                                     onChange={(e) => setHwFilterValue('status', e.target.value)}
                                                      placeholder={'Не выбран'}/>
                                     </FormItem>
                                 </FormLayout>
-                            </div>
-                            <div className={'flex flex-col p-4 bg-white shadow-sm rounded-md'}>
-                                <HomeworkTasksTable
-                                    // onSelectAuthor={handleSelectAuthor}
-                                    // onSelectLesson={handleSelectLesson}
-                                    tasks={tasks}
-                                />
-                            </div>
+                            </Group>
+                            {/*<Group>*/}
+                            {/*    <div className={'flex p-4'}>*/}
+                                    <HomeworkTasksTable
+                                        // onSelectAuthor={handleSelectAuthor}
+                                        // onSelectLesson={handleSelectLesson}
+                                        tasks={filteredTasks}
+                                    />
+                                {/*</div>*/}
+                            {/*</Group>*/}
                         </div>
                     )}
                     {selectedTab === 'lessons' && (
@@ -218,7 +226,7 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                             </div>
                         </>
                     )}
-                </Group>
+                </div>
             </Panel>
         </AuthenticatedLayout>
 
