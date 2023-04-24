@@ -41,7 +41,7 @@ const HomeworkTasksTable = ({tasks, onSelectAuthor, onSelectLesson}) => {
             dataIndex: ['lesson'],
             width: 260,
             render: (lesson, hw) => (
-                <div onClick={() => onSelectLesson(lesson)} className={'cursor-pointer hover:text-emerald-500 flex text-gray-400 flex-col items-start'}>
+                <div onClick={() => onSelectLesson(lesson)} className={'cursor-pointer hover:text-orange-500 flex text-gray-400 flex-col items-start'}>
                     <span className={`text-sm font-medium text-gray-600`}>{lesson.title}</span>
                     <span className={'text-xs mb-3'}>{lesson.description}</span>
                     <HomeworkStatusBlock homework={hw}/>
@@ -62,7 +62,7 @@ const HomeworkTasksTable = ({tasks, onSelectAuthor, onSelectLesson}) => {
             title: 'Автор',
             dataIndex: ['author'],
             render: (author) => (
-                <div onClick={() => onSelectAuthor(author)} className={'cursor-pointer hover:text-emerald-500 text-gray-600 flex items-center space-x-2'}>
+                <div onClick={() => onSelectAuthor(author)} className={'cursor-pointer hover:text-orange-500 text-gray-600 flex items-center space-x-2'}>
                     <span className={`text-sm`}>{author.name}</span>
                 </div>
             )

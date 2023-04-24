@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head, Link} from '@inertiajs/inertia-react';
 import {Breadcrumb, Button} from "antd";
@@ -10,10 +10,34 @@ import HomeworkDrawer from "@/Components/Homeworks/HomeworkDrawer";
 import {HomeworkStatus} from "@/constants/statuses";
 import HomeworkStatusBlock from "@/Components/Homeworks/HomeworkStatusBlock";
 import useRole from "@/helpers/useRole";
+import {
+    Caption,
+    Div,
+    Group,
+    Headline,
+    HorizontalScroll,
+    Panel,
+    PanelHeader,
+    PanelHeaderContent, Tabs,
+    TabsItem
+} from "@vkontakte/vkui";
+
+const tabs = [
+    {
+        label: 'Содержание',
+        key: 'content',
+    },
+    {
+        label: 'Методические материалы',
+        key: 'files',
+    }
+]
 
 export default function Lesson(props) {
     const {lesson, homework, canAddHomework, lastReworkDate} = props
     const {course} = lesson
+
+    const [selectedTab, setSelectedTab] = useState('content')
 
     const [showHomeworkDrawer,,toggleHomeworkDrawer] = useToggleState()
     const [showEditDrawer,,toggleEditDrawer] = useToggleState()
@@ -36,90 +60,84 @@ export default function Lesson(props) {
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Введение в веб-разработку</h2>}
         >
-            <Head title="Список уроков"/>
+            <Head title={lesson.title}/>
 
-            <div className="py-8">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className={'flex flex-col space-y-5'}>
+            <Panel>
+                <PanelHeader>
+                    <PanelHeaderContent
+                        status={<Caption style={{color: 'var(--vkui--color_link_contrast--hover)'}}>{course.title}</Caption>}
+                    >
+                        <Headline style={{color: 'var(--vkui--color_text_contrast)'}} level={1}
+                                  weight={2}>{lesson.title}</Headline>
+                    </PanelHeaderContent>
+                </PanelHeader>
 
-                        <Breadcrumb>
-                            <Breadcrumb.Item><HomeOutlined/></Breadcrumb.Item>
-                            <Breadcrumb.Item>
-                                <Link href={route('home')}>
-                                    {course.title}
-                                </Link>
-                            </Breadcrumb.Item>
+                <Group>
+                    <Div className={'flex-1'}>
+                        <h5 className={'font-bold text-2xl my-0'}>
+                            {lesson.title}
+                        </h5>
+                        <span>
+                            {lesson.description}
+                        </span>
 
-                            <Breadcrumb.Item>{lesson.title}</Breadcrumb.Item>
-                        </Breadcrumb>
-
-                        <div>
-                            <div className={'rounded-md p-4 mt-3 bg-white'}>
-                                <div className={'flex justify-between'}>
-                                    <div className={'flex-1'}>
-                                        <span className={'text-gray-400 text-lg'}>Тема: </span>
-                                        <br/>
-                                        <h5 className={'font-bold text-2xl my-0'}>
-                                            {lesson.title}
-                                        </h5>
-                                        <span>
-                                            {lesson.description}
-                                        </span>
-                                    </div>
-                                    {isStudent && (
-                                        <div className={'flex-1'}>
-                                            <span className={'text-gray-400 text-lg'}>Решение: </span>
-                                            <div
-                                                className={'border flex space-x-2 items-center mt-2 border-dashed border-gray-200 rounded-md p-2'}>
-                                                <HomeworkStatusBlock homework={homework}/>
-                                                <Button block disabled={!canAddHomework}
-                                                        type={(!homework || homework?.status?.id === HomeworkStatus?.OPEN.id) && 'primary'}
-                                                        onClick={toggleHomeworkDrawer}>
-                                                    {showHomeworkButtonTitle} <ArrowRightOutlined/>
-                                                </Button>
-                                            </div>
-                                            <HomeworkDrawer lesson={lesson} homework={homework} reworkDate={lastReworkDate}
-                                                            open={showHomeworkDrawer} onClose={toggleHomeworkDrawer}/>
-                                        </div>
-                                    )}
+                        {isStudent && (
+                            <div className={'flex flex-col'}>
+                                <span className={'text-gray-400 text-lg'}>Решение: </span>
+                                <div
+                                    className={'border flex space-x-2 items-center mt-2 border-dashed border-gray-200 rounded-md p-2'}>
+                                    <HomeworkStatusBlock homework={homework}/>
+                                    <Button block disabled={!canAddHomework}
+                                            type={(!homework || homework?.status?.id === HomeworkStatus?.OPEN.id) && 'primary'}
+                                            onClick={toggleHomeworkDrawer}>
+                                        {showHomeworkButtonTitle} <ArrowRightOutlined/>
+                                    </Button>
                                 </div>
-
-                                {isController && (
-                                    <div className={'mt-4 pt-4 border-0 border-t border-solid border-gray-200'}>
-                                        <Button onClick={toggleEditDrawer} icon={<EditOutlined/>}>Редактировать</Button>
-                                        <LessonDrawer lesson={lesson} onClose={toggleEditDrawer}
-                                                      open={showEditDrawer}/>
-                                    </div>
-                                )}
+                                <HomeworkDrawer lesson={lesson} homework={homework} reworkDate={lastReworkDate}
+                                                open={showHomeworkDrawer} onClose={toggleHomeworkDrawer}/>
                             </div>
-
-                        </div>
-
-                        <div className={'flex items-start grid grid-cols-6 gap-x-4'}>
-                            <div className={'col-span-4 bg-white rounded-md p-4 content'} dangerouslySetInnerHTML={{__html: lesson.content}}>
+                        )}
+                        {isController && (
+                            <div className={'mt-4 pt-4 border-0 border-t border-solid border-gray-200'}>
+                                <Button onClick={toggleEditDrawer} icon={<EditOutlined/>}>Редактировать</Button>
+                                <LessonDrawer lesson={lesson} onClose={toggleEditDrawer}
+                                              open={showEditDrawer}/>
                             </div>
-                            <div className={'col-span-2 flex flex-col space-y-4'}>
-                                <div className={'bg-white rounded-md p-4'}>
-                                    <h3>Методические материалы:</h3>
-                                    <div className={'flex flex-col space-y-3'}>
-                                        {lesson.attachments.length ? (
-                                            lesson.attachments.map(attachment => (
-                                                <FileAttachment attachment={attachment} key={attachment.id}/>
-                                            ))
-                                        ) : (
-                                            <div className={'flex items-center p-1 py-2 rounded-md bg-gray-100'}>
-                                                <span className={'ml-2 text-gray-600 text-sm'}>Не предоставлены</span>
-                                            </div>
-                                        )}
-                                    </div>
+                        )}
+                    </Div>
+                    <Tabs mode="default">
+                        <HorizontalScroll arrowSize="m">
+                            {tabs.map((tab) => (
+                                <TabsItem
+                                    key={tab.key} selected={tab.key === selectedTab}
+                                    onClick={() => setSelectedTab(tab.key)}
+                                >
+                                    {tab.label}
+                                </TabsItem>
+                            ))}
+                        </HorizontalScroll>
+                    </Tabs>
+                </Group>
+                <Group>
+                    {selectedTab === 'content' ? (
+                        <div className={'col-span-4 bg-white rounded-md p-4 content'} dangerouslySetInnerHTML={{__html: lesson.content}}></div>
+
+                    ): (
+                        <Div className={'flex flex-col space-y-3'}>
+                            {lesson.attachments.length ? (
+                                lesson.attachments.map(attachment => (
+                                    <FileAttachment attachment={attachment} key={attachment.id}/>
+                                ))
+                            ) : (
+                                <div className={'flex items-center p-1 py-2 rounded-md bg-gray-100'}>
+                                    <span className={'ml-2 text-gray-600 text-sm'}>Не предоставлены</span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            )}
+                        </Div>
+                    )}
+                </Group>
+            </Panel>
         </AuthenticatedLayout>
     );
 }

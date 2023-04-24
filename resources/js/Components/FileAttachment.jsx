@@ -38,7 +38,7 @@ const FileAttachment = ({attachment, onDelete}) => {
     return (
         <div
             onClick={() => handleOpen(attachment)}
-            className={'flex bg-white bg-opacity-50 cursor-pointer select-none hover:bg-gray-50 transition hover:border-emerald-400 items-center justify-between p-4 border border-solid rounded-md border-gray-200'}>
+            className={'flex bg-white bg-opacity-50 cursor-pointer select-none hover:bg-gray-50 transition hover:border-orange-400 items-center justify-between p-4 border border-solid rounded-md border-gray-200'}>
             <div className={'flex items-center'}>
                 {getIcon(attachment.type)}
                 <div className={'flex flex-col ml-3'}>
