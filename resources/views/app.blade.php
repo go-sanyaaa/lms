@@ -14,7 +14,7 @@
         @viteReactRefresh
         @vite('resources/js/app.jsx')
         @inertiaHead
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico?v=1" />
     </head>
     <body class="font-sans antialiased">
         @inertia
