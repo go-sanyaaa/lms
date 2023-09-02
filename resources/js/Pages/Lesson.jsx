@@ -106,18 +106,20 @@ export default function Lesson(props) {
                             </div>
                         )}
                     </Div>
-                    <Tabs mode="default">
-                        <HorizontalScroll arrowSize="m">
-                            {tabs.map((tab) => (
-                                <TabsItem
-                                    key={tab.key} selected={tab.key === selectedTab}
-                                    onClick={() => setSelectedTab(tab.key)}
-                                >
-                                    {tab.label}
-                                </TabsItem>
-                            ))}
-                        </HorizontalScroll>
-                    </Tabs>
+                    {(lesson?.attachments?.length > 0) && (
+                        <Tabs mode="default">
+                            <HorizontalScroll arrowSize="m">
+                                {tabs.map((tab) => (
+                                    <TabsItem
+                                        key={tab.key} selected={tab.key === selectedTab}
+                                        onClick={() => setSelectedTab(tab.key)}
+                                    >
+                                        {tab.label}
+                                    </TabsItem>
+                                ))}
+                            </HorizontalScroll>
+                        </Tabs>
+                    )}
                 </Group>
                 <Group>
                     {selectedTab === 'content' ? (
