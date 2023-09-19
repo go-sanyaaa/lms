@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\HomeworkStatusIdTerms;
 use App\Http\Requests\Lessons\StoreAnswerRequest;
-use App\Http\Requests\Lessons\StoreLessonRequest;
-use App\Http\Requests\Lessons\UpdateLessonRequest;
+use App\Http\Requests\Lessons\LessonRequest;
 use App\Http\Resources\HomeworkListResource;
 use App\Http\Resources\LessonResource;
 use App\Models\Answer;
@@ -67,15 +66,15 @@ class LessonController extends Controller
 
     /**
      * @param  Lesson  $lesson
-     * @param  UpdateLessonRequest  $request
+     * @param  LessonRequest  $request
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function update(Lesson $lesson, UpdateLessonRequest $request): RedirectResponse
+    public function update(Lesson $lesson, LessonRequest $request): RedirectResponse
     {
         $this->authorize('update', $lesson);
 
-        $data = $request->only(['title', 'content', 'description']);
+        $data = $request->only(['title', 'content', 'description', 'type']);
         $lesson->fill($data)->save();
 
         $mediaIds = collect($request->get('attachments'))->pluck('id')->toArray();
@@ -87,15 +86,14 @@ class LessonController extends Controller
     }
 
     /**
-     * @param  StoreLessonRequest  $request
+     * @param  LessonRequest  $request
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function store(StoreLessonRequest $request, Course $course): RedirectResponse
+    public function store(LessonRequest $request, Course $course): RedirectResponse
     {
         $this->authorize('create', Lesson::class);
-
-        $data = $request->only(['title', 'content', 'description']);
+        $data = $request->only(['title', 'content', 'description', 'type']);
 
         $lesson = Lesson::query()->make($data);
         $lesson->course_id = $course->id;

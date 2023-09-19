@@ -1,5 +1,5 @@
-import {Button, Drawer, Form, Input} from "antd";
-import React, {useEffect} from "react";
+import {Button, Drawer, Form, Input, Select} from "antd";
+import React, {useEffect, useMemo} from "react";
 import t from "prop-types"
 import {LessonType} from "@/Types/LessonType";
 import {useForm} from "@inertiajs/inertia-react";
@@ -7,36 +7,32 @@ import InputTextEditor from "@/Components/InputTextEditor/InputTextEditor";
 import InputAttachments from "@/Components/InputAttachments";
 import {SaveOutlined} from "@ant-design/icons";
 import useRole from "@/helpers/useRole";
+import {LESSON_TYPE, LESSON_TYPES} from "@/constants/lessons";
+import {useFormHelper} from "@/helpers/useFormHelper";
 
 const LessonDrawer = ({lesson, onClose, open, courseId}) => {
-    const [form] = Form.useForm()
+    const initialValues = useMemo(() => ({
+        title: lesson?.title || '',
+        description: lesson?.description || '',
+        content: lesson?.content || '',
+        attachments: lesson?.attachments || [],
+        type: lesson?.type !== undefined ? lesson?.type : LESSON_TYPE.TESTING
+    }), [lesson])
 
-    const {setData, put, processing, errors, post, reset, clearErrors} = useForm('LessonEdit', {
-        title: '',
-        description: '',
-        content: '',
-        attachments: ''
-    })
+    const form = useForm('LessonEdit', initialValues)
+    const {mapItemProps, mapInputProps} = useFormHelper(form)
+    const {data, setData, put, processing, isDirty, setDefaults, errors, post, reset, clearErrors} = form
 
     const {isController} = useRole()
 
     useEffect(() => {
-        if (open) {
-            form.resetFields()
+        if(open) {
+            setDefaults(initialValues)
+            setData(initialValues)
         } else {
-            reset()
             clearErrors()
         }
-    }, [open])
-
-    useEffect(() => {
-        setData({
-            title: lesson?.title,
-            description: lesson?.description,
-            content: lesson?.content,
-            attachments: lesson?.attachments
-        })
-    }, [lesson])
+    }, [open, initialValues])
 
     const handleSubmit = () => {
         lesson
@@ -55,30 +51,36 @@ const LessonDrawer = ({lesson, onClose, open, courseId}) => {
                     </div>
                 )}
         >
-            <Form form={form} onValuesChange={(_, values) => setData(values)} initialValues={lesson}
-                  layout={'vertical'}>
-                <Form.Item required label={'Название'} name={'title'} validateStatus={errors.title && 'error'}
-                           help={errors.title}>
-                    <Input />
+            <Form layout={'vertical'}>
+                <Form.Item required label={'Название'} {...mapItemProps('title')}>
+                    <Input {...mapInputProps('title')} />
                 </Form.Item>
-                <Form.Item required label={'Описание'} name={'description'} validateStatus={errors.description && 'error'}
-                           help={errors.description}>
-                    <Input.TextArea />
+                <Form.Item required label={'Тип урока'} {...mapItemProps('type')}>
+                    <Select {...mapInputProps('type')}>
+                        {LESSON_TYPES.map(lesson => (
+                            <Select.Option key={lesson.key} value={lesson.key}>
+                                {lesson.title}
+                            </Select.Option>
+                        ))}
+                    </Select>
                 </Form.Item>
-                <Form.Item required label={'Содержание'} name={'content'} validateStatus={errors.content && 'error'}
-                           help={errors.content}>
-                    <InputTextEditor/>
+                <Form.Item required label={'Описание'} {...mapItemProps('description')}>
+                    <Input.TextArea {...mapInputProps('description')}/>
                 </Form.Item>
-
-                <Form.Item label={'Дополнтительный материалы'} name={'attachments'}
-                           validateStatus={errors.attachments && 'error'}
-                           help={errors.attachments}>
-                    <InputAttachments disabled={!isController}/>
+                <Form.Item required label={'Содержание'} {...mapItemProps('content')}>
+                    <InputTextEditor {...mapInputProps('content')}/>
                 </Form.Item>
-
+                {data.type === LESSON_TYPE.HOMEWORK && (
+                    <Form.Item label={'Дополнтительные материалы'} {...mapItemProps('attachments')}>
+                        <InputAttachments disabled={!isController} {...mapInputProps('attachments')}/>
+                    </Form.Item>
+                )}
             </Form>
-            <Button block disabled={!isController} loading={processing} type={'primary'} onClick={handleSubmit}
-                    icon={<SaveOutlined/>}>Сохранить</Button>
+            <Button block disabled={!isController || !isDirty} loading={processing} type={'primary'} onClick={handleSubmit}
+                    icon={<SaveOutlined/>}
+            >
+                {lesson ? 'Сохранить изменения' : 'Создать урок'}
+            </Button>
         </Drawer>
     )
 }

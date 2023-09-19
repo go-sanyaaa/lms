@@ -20,6 +20,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  *
  * @property int $id
  * @property int $course_id
+ * @property int $type
  * @property string $title
  * @property string|null $description
  * @property string|null $content
@@ -52,6 +53,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static Builder|Lesson withMediaAndVariants($tags = [], bool $matchAll = false)
  * @method static Builder|Lesson withMediaAndVariantsMatchAll($tags = [])
  * @method static Builder|Lesson withMediaMatchAll(bool $tags = [], bool $withVariants = false)
+ * @method static Builder|Lesson whereType($value)
  * @mixin Eloquent
  */
 class Lesson extends Model
@@ -59,7 +61,7 @@ class Lesson extends Model
     use LogsActivity, Mediable;
 
     protected $fillable = [
-        'title', 'description', 'content'
+        'title', 'description', 'content', 'type'
     ];
 
     protected $casts = [

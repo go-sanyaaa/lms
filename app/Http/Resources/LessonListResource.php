@@ -18,6 +18,7 @@ class LessonListResource extends JsonResource
             'description' => $lesson->description,
             'content' => $lesson->content,
             'finished_at' => $lesson->finished_at,
+            'type' => $lesson->type,
             'attachments' => $this->when(
                 $lesson->relationLoaded('media'),
                 fn() => MediaUploadResource::collection($lesson->media)

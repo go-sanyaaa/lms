@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Lessons;
 
+use App\Enums\LessonTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateLessonRequest extends FormRequest
+class LessonRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,6 +20,7 @@ class UpdateLessonRequest extends FormRequest
             'description' => ['required', 'string'],
             'content' => ['required', 'string'],
             'attachments' => ['array'],
+            'type' => [Rule::in([LessonTypeEnum::Testing->value, LessonTypeEnum::Homework->value])],
             'attachments.*.id' => ['required','exists:media,id']
         ];
     }

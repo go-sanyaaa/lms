@@ -16,6 +16,7 @@ class LessonResource extends JsonResource
         return [
             'id' => $lesson->id,
             'title' => $lesson->title,
+            'type' => $lesson->type,
             'description' => $lesson->description,
             'content' => $lesson->content,
             'course' => CourseListResource::make($lesson->course),
