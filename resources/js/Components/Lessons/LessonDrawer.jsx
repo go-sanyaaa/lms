@@ -1,5 +1,5 @@
 import {Button, Drawer, Form, Input, Select} from "antd";
-import React, {useEffect, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import t from "prop-types"
 import {LessonType} from "@/Types/LessonType";
 import {useForm} from "@inertiajs/inertia-react";
@@ -19,20 +19,26 @@ const LessonDrawer = ({lesson, onClose, open, courseId}) => {
         type: lesson?.type !== undefined ? lesson?.type : LESSON_TYPE.TESTING
     }), [lesson])
 
+    const [content, setContent] = useState(initialValues.content)
     const form = useForm('LessonEdit', initialValues)
     const {mapItemProps, mapInputProps} = useFormHelper(form)
-    const {data, setData, put, processing, isDirty, setDefaults, errors, post, reset, clearErrors} = form
+    const {data, setData, put, processing, setDefaults, errors, post, reset, clearErrors} = form
 
     const {isController} = useRole()
 
     useEffect(() => {
         if(open) {
+            setContent(initialValues.content)
             setDefaults(initialValues)
             setData(initialValues)
         } else {
             clearErrors()
         }
     }, [open, initialValues])
+
+    useEffect(() => {
+        setData('content', content)
+    }, [content])
 
     const handleSubmit = () => {
         lesson
@@ -68,7 +74,7 @@ const LessonDrawer = ({lesson, onClose, open, courseId}) => {
                     <Input.TextArea {...mapInputProps('description')}/>
                 </Form.Item>
                 <Form.Item required label={'Содержание'} {...mapItemProps('content')}>
-                    <InputTextEditor {...mapInputProps('content')}/>
+                    <InputTextEditor value={content} initialValue={initialValues.content} onChange={setContent}/>
                 </Form.Item>
                 {data.type === LESSON_TYPE.HOMEWORK && (
                     <Form.Item label={'Дополнтительные материалы'} {...mapItemProps('attachments')}>
@@ -76,7 +82,7 @@ const LessonDrawer = ({lesson, onClose, open, courseId}) => {
                     </Form.Item>
                 )}
             </Form>
-            <Button block disabled={!isController || !isDirty} loading={processing} type={'primary'} onClick={handleSubmit}
+            <Button block disabled={!isController} loading={processing} type={'primary'} onClick={handleSubmit}
                     icon={<SaveOutlined/>}
             >
                 {lesson ? 'Сохранить изменения' : 'Создать урок'}
