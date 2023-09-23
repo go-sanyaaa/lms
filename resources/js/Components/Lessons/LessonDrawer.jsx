@@ -49,6 +49,14 @@ const LessonDrawer = ({lesson, onClose, open, courseId}) => {
             })
     }
 
+    useEffect(() => {
+        if(data.type === LESSON_TYPE.TESTING) {
+            setData('attachments', [])
+        } else {
+            setData('attachments', lesson.attachments || [])
+        }
+    }, [data?.type]);
+
     return (
         <Drawer width={600} open={open} centered onClose={onClose} closable={false}
                 title={(
