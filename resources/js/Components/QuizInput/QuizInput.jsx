@@ -3,17 +3,16 @@ import {EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useToggleState from "@/helpers/useToggleState";
 import QuizDrawer from "@/Components/QuizInput/QuizDrawer";
 import {useCallback} from "react";
-import {debounce} from "lodash";
 
 const QuizInput = ({value, onChange}) => {
     const [showDrawer, , toggleShowDrawer] = useToggleState()
 
     const handleChange = useCallback(
-        debounce((questions) => {
+        (questions) => {
             onChange({
                 questions
             })
-        }, 500),
+        },
         [onChange, value]
     )
 

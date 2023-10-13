@@ -49,7 +49,7 @@ const QuizDrawer = ({open, onClose, questions = [], onChange}) => {
         const newBlocks = [...questions]
         const moved = newBlocks.splice(source.index, 1)[0]
         newBlocks.splice(destination.index, 0, moved);
-        onChange(questions)
+        onChange(newBlocks)
     }
 
     return (
