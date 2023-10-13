@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\HomeworkStatusIdTerms;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -55,8 +56,8 @@ class Homework extends Pivot
 
     protected static function booted(): void
     {
-        static::creating(static function (Homework $userLesson) {
-            $userLesson->status_id = 3;
+        static::creating(static function (Homework $homework) {
+            $homework->status_id = HomeworkStatusIdTerms::Open->value;
         });
     }
 
