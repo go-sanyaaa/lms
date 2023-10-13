@@ -22,7 +22,8 @@ class LessonListResource extends JsonResource
             'attachments' => $this->when(
                 $lesson->relationLoaded('media'),
                 fn() => MediaUploadResource::collection($lesson->media)
-            )
+            ),
+            'quiz' => QuizResource::make($lesson->quiz),
         ];
     }
 }

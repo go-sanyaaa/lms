@@ -10,10 +10,9 @@ function QuestionBlock({onDelete, order, index, onUpdate, value, onCopy, dragHan
 
     const [modal, contextHolder] = Modal.useModal()
 
-    const handleUpdate = useCallback((values) => {
+    const handleUpdate = useCallback((value) => {
         onUpdate({
             ...value,
-            data: values,
         })
     }, [onUpdate, value])
 
@@ -71,7 +70,7 @@ function QuestionBlock({onDelete, order, index, onUpdate, value, onCopy, dragHan
                     )}
                 </div>
             </div>
-            <AnswerOptionsBlock index={index} value={value.data} onUpdate={handleUpdate}/>
+            <AnswerOptionsBlock index={index} value={value} onUpdate={handleUpdate}/>
         </Group>
     )
 }
@@ -84,7 +83,9 @@ QuestionBlock.propTypes = {
     onCopy: t.func,
     value: t.shape({
         key: t.string.isRequired,
-        data: t.object
+        answers: t.array,
+        extra: t.object,
+        question: t.string,
     }).isRequired,
     dragHandleProps: t.object
 }

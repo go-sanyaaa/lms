@@ -42,17 +42,28 @@ Artisan::command('debug-sentry', function () {
     throw new Exception('My first Sentry error!');
 });
 
+function convert($size)
+{
+    $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+    return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
+}
+
 Artisan::command('calc-user-access', function () {
-    $users = User::query()
-        ->with('mentor.headUsers')
-        ->whereHas('mentor.headUsers')
-        ->get();
+    $c = collect()->range(10001, 40000);
 
-    DB::beginTransaction();
+    ini_set('memory_limit', '128M');
 
-    $users->each(fn(User $user) =>
-        $user->headUsers()->sync($user->mentor->headUsers, false)
-    );
+    echo ini_get('memory_limit');
+    echo convert(memory_get_usage());
+    echo "\n";
 
-    DB::commit();
+    $users = User::query()->get();
+
+    \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\UserInviteNotification('123@asd.ru', '123'));
+
+//    $users = User::query()
+//        ->get();
+//
+    echo convert(memory_get_usage());
+    echo "\n";
 });

@@ -10,53 +10,47 @@ import {makeInitialQuestion} from "@/Components/QuizInput/Blocks/AnswerOptionsBl
 
 
 const QuizDrawer = ({open, onClose, questions = [], onChange}) => {
-    const [blocks, setBlocks] = useState(questions)
-
     const removeBlock = useCallback((index) => {
-        const newBlocks = [...blocks]
+        const newBlocks = [...questions]
         newBlocks.splice(index, 1)
 
-        setBlocks(newBlocks)
-    }, [blocks, setBlocks])
+        onChange(newBlocks)
+    }, [questions])
 
     const createBlock = useCallback(() => {
         const newBlock = {
             key: uuidv4(),
-            data: makeInitialQuestion()
+            ...makeInitialQuestion()
         }
-        setBlocks([...blocks, newBlock])
-    }, [blocks])
+        onChange([...questions, newBlock])
+    }, [questions])
 
     const updateBlock = useCallback((index, value) => {
-        const newBlocks = [...blocks]
+        const newBlocks = [...questions]
         newBlocks.splice(index, 1, value)
 
-        setBlocks(newBlocks)
-    }, [blocks])
+        onChange(newBlocks)
+    }, [questions])
 
     const copyBlock = useCallback((index) => {
-        const copy = Object.assign({}, blocks[index], {
+        const copy = Object.assign({}, questions[index], {
             key: uuidv4()
         })
 
-        setBlocks([
-            ...blocks.slice(0, index + 1),
+        onChange([
+            ...questions.slice(0, index + 1),
             copy,
-            ...blocks.slice(index + 1)
+            ...questions.slice(index + 1)
         ])
 
-    }, [blocks, setBlocks])
+    }, [questions])
 
     const onDragEnd = ({source, destination}) => {
-        const newBlocks = [...blocks]
+        const newBlocks = [...questions]
         const moved = newBlocks.splice(source.index, 1)[0]
         newBlocks.splice(destination.index, 0, moved);
-        setBlocks(newBlocks)
+        onChange(questions)
     }
-
-    useEffect(() => {
-        onChange(blocks)
-    }, [blocks]);
 
     return (
         <Drawer width={600} bodyStyle={{padding: 0}} open={open} centered onClose={onClose} closable={false}
@@ -66,58 +60,62 @@ const QuizDrawer = ({open, onClose, questions = [], onChange}) => {
                     </div>
                 )}
         >
-            <div className={'p-6'}>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId={`stories-priority`}
-                               direction="vertical">
-                        {(provided, {isDraggingOver}) => {
-                            return (
-                                <div
-                                    {...provided.droppableProps}
-                                    ref={provided.innerRef}
-                                    className={`flex flex-col`}
-                                >
-                                    {blocks?.map((block, index) => (
-                                        <Draggable disableInteractiveElementBlocking
-                                                   key={block.key}
-                                                   draggableId={`${block.key}`}
-                                                   index={index}>
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    style={provided.draggableProps.style}
-                                                >
-                                                    <QuestionBlock
-                                                        onDelete={() => removeBlock(index)}
-                                                        order={index + 1}
-                                                        index={index}
-                                                        value={block}
-                                                        dragHandleProps={provided.dragHandleProps}
-                                                        onCopy={() => copyBlock(index)}
-                                                        onUpdate={(value) => updateBlock(index, value)}
-                                                        key={block.key}
-                                                    />
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )
-                        }}
-                    </Droppable>
-                    <Button
-                        onClick={createBlock}
-                        size="l"
-                        stretched
-                        after={<Icon20Add/>}
-                    >
-                        Добавить вопрос
-                    </Button>
-                </DragDropContext>
+            <div className={'flex flex-col h-full'}>
+                <div className={'p-6 flex-1 overflow-y-auto'}>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId={`stories-priority`}
+                                   direction="vertical">
+                            {(provided, {isDraggingOver}) => {
+                                return (
+                                    <div
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                        className={`flex flex-col`}
+                                    >
+                                        {questions?.map((block, index) => (
+                                            <Draggable disableInteractiveElementBlocking
+                                                       key={block.key}
+                                                       draggableId={`${block.key}`}
+                                                       index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        style={provided.draggableProps.style}
+                                                    >
+                                                        <QuestionBlock
+                                                            onDelete={() => removeBlock(index)}
+                                                            order={index + 1}
+                                                            index={index}
+                                                            value={block}
+                                                            dragHandleProps={provided.dragHandleProps}
+                                                            onCopy={() => copyBlock(index)}
+                                                            onUpdate={(value) => updateBlock(index, value)}
+                                                            key={block.key}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )
+                            }}
+                        </Droppable>
+                        <Button
+                            onClick={createBlock}
+                            stretched
+                            mode={'outline'}
+                            after={<Icon20Add/>}
+                        >
+                            Добавить вопрос
+                        </Button>
+                    </DragDropContext>
+                </div>
+                <div className={'px-6 py-4 bg-gray-100'}>
+                    <Button onClick={onClose} stretched size={'l'}>Завершить редактирование</Button>
+                </div>
             </div>
-
         </Drawer>
     )
 }

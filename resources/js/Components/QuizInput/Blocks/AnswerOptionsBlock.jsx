@@ -15,9 +15,7 @@ export const makeInitialQuestion = () => {
     return {
         question: '',
         answers: [{key: uuidv4(), text: '', is_correct: false}],
-        extra: {
-            multiple: false
-        }
+        multiple: false
     }
 }
 
@@ -27,12 +25,12 @@ function AnswerOptionsBlock({value, onUpdate}) {
     })
 
     const canSetNewCorrectAnswers = useMemo(
-        () => formik.values.extra.multiple || formik.values.answers.every(a => !a.is_correct),
-        [formik.values.extra, formik.values.answers]
+        () => formik.values.multiple || formik.values.answers.every(a => !a.is_correct),
+        [formik.values.multiple, formik.values.answers]
     )
 
     useEffect(() => {
-        if (formik.values.extra.multiple) {
+        if (formik.values.multiple) {
             return
         }
 
@@ -43,7 +41,7 @@ function AnswerOptionsBlock({value, onUpdate}) {
         }
 
         correctAnswers.slice(1).map(toggleAnswer)
-    }, [formik.values.extra, formik.values.answers]);
+    }, [formik.values.multiple, formik.values.answers]);
 
     const addAnswer = useCallback(() => {
         const newIndex = formik.values.answers.length
@@ -74,12 +72,12 @@ function AnswerOptionsBlock({value, onUpdate}) {
     }, [formik.values]);
 
     const [CheckedIcon, UncheckedIcon] = useMemo(() => {
-        return formik.values.extra.multiple ? [
+        return formik.values.multiple ? [
             Icon24CheckBoxOn, Icon24CheckBoxOff
         ] : [
             Icon24CheckCircleOn, Icon24CheckCircleOff
         ]
-    }, [formik.values.extra.multiple]);
+    }, [formik.values.multiple]);
 
     return (
         <>
@@ -161,7 +159,7 @@ function AnswerOptionsBlock({value, onUpdate}) {
                             }}
                         >
                             <Caption>Множественный выбор</Caption>
-                            <Switch name={'extra.multiple'} checked={formik.values.extra.multiple}
+                            <Switch name={'multiple'} checked={formik.values.multiple}
                                     onChange={formik.handleChange}/>
                         </div>
                     </div>
@@ -181,9 +179,7 @@ AnswerOptionsBlock.propTypes = {
                 is_correct: t.bool
             })
         ),
-        extra: t.shape({
-            multiple: t.bool
-        })
+        multiple: t.bool
     }).isRequired,
     onUpdate: t.func.isRequired,
 }

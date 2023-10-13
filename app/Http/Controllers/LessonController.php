@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\QuizRequestData;
 use App\Enums\HomeworkStatusIdTerms;
+use App\Enums\LessonTypeEnum;
 use App\Http\Requests\Lessons\StoreAnswerRequest;
 use App\Http\Requests\Lessons\LessonRequest;
 use App\Http\Resources\HomeworkListResource;
@@ -12,6 +14,7 @@ use App\Models\Course;
 use App\Models\Homework;
 use App\Models\Lesson;
 use App\Models\User;
+use App\Services\QuizService;
 use App\Services\UsersService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -24,10 +27,12 @@ use Spatie\Activitylog\Models\Activity;
 class LessonController extends Controller
 {
     private UsersService $usersService;
+    private QuizService $quizService;
 
-    public function __construct(UsersService $usersService)
+    public function __construct(UsersService $usersService, QuizService $quizService)
     {
         $this->usersService = $usersService;
+        $this->quizService = $quizService;
     }
 
     /**
@@ -77,6 +82,8 @@ class LessonController extends Controller
         $data = $request->only(['title', 'content', 'description', 'type']);
         $lesson->fill($data)->save();
 
+        $this->quizService->syncQuiz($lesson, new QuizRequestData($request->get('quiz', [])));
+
         $mediaIds = collect($request->get('attachments'))->pluck('id')->toArray();
         $lesson->syncMedia($mediaIds, 'attachments');
 
@@ -98,6 +105,8 @@ class LessonController extends Controller
         $lesson = Lesson::query()->make($data);
         $lesson->course_id = $course->id;
         $lesson->save();
+
+        $this->quizService->syncQuiz($lesson, new QuizRequestData($request->get('quiz', [])));
 
         $mediaIds = collect($request->get('attachments'))->pluck('id')->toArray();
         $lesson->syncMedia($mediaIds, 'attachments');

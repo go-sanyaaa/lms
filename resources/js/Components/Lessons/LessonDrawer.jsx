@@ -64,7 +64,7 @@ const LessonDrawer = ({lesson, onClose, open, courseId}) => {
             formik.setFieldValue('attachments', [])
         } else {
             formik.setFieldValue('attachments', lesson?.attachments || [])
-            formik.setFieldValue('quiz', null)
+            formik.setFieldValue('quiz', lesson?.quiz || [])
         }
     }, [formik.values?.type, lesson]);
 

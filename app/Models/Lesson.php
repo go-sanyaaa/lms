@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Quizzes\Quiz;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Plank\Mediable\Media;
 use Plank\Mediable\Mediable;
@@ -55,6 +57,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static Builder|Lesson withMediaMatchAll(bool $tags = [], bool $withVariants = false)
  * @method static Builder|Lesson whereType($value)
  * @mixin Eloquent
+ * @property-read Quiz|null $quiz
  */
 class Lesson extends Model
 {
@@ -82,5 +85,10 @@ class Lesson extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logAll();
+    }
+
+    public function quiz(): HasOne
+    {
+        return $this->hasOne(Quiz::class, 'lesson_id');
     }
 }

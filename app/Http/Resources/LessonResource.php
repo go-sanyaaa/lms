@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Quizzes\Quiz;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LessonResource extends JsonResource
@@ -20,7 +21,8 @@ class LessonResource extends JsonResource
             'description' => $lesson->description,
             'content' => $lesson->content,
             'course' => CourseListResource::make($lesson->course),
-            'attachments' => MediaUploadResource::collection($lesson->media)
+            'attachments' => MediaUploadResource::collection($lesson->media),
+            'quiz' => QuizResource::make($lesson->quiz)
         ];
     }
 }

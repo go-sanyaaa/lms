@@ -15,13 +15,21 @@ class LessonRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return array_merge([
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'content' => ['required', 'string'],
             'attachments' => ['array'],
             'type' => [Rule::in([LessonTypeEnum::Testing->value, LessonTypeEnum::Homework->value])],
             'attachments.*.id' => ['required','exists:media,id']
-        ];
+        ], $this->get('type') === LessonTypeEnum::Testing->value ? [
+            'quiz' => ['required'],
+            'quiz.questions' => ['array', 'required', 'min:1'],
+            'quiz.questions.*.multiple' => ['boolean'],
+            'quiz.questions.*.answers' => ['array', 'required'],
+            'quiz.questions.*.answers.*.text' => ['string', 'required'],
+            'quiz.questions.*.answers.*.is_correct' => ['boolean', 'required']
+        ] : []
+        );
     }
 }

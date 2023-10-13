@@ -1,8 +1,8 @@
 import {Button} from "antd";
-import {PlusOutlined} from "@ant-design/icons";
+import {EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useToggleState from "@/helpers/useToggleState";
 import QuizDrawer from "@/Components/QuizInput/QuizDrawer";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 import {debounce} from "lodash";
 
 const QuizInput = ({value, onChange}) => {
@@ -19,9 +19,15 @@ const QuizInput = ({value, onChange}) => {
 
     return (
         <div>
-            <Button block type={'dashed'} onClick={toggleShowDrawer} icon={<PlusOutlined/>}>
-                Создать тест
-            </Button>
+            {value?.questions?.length > 0 ? (
+                <Button block onClick={toggleShowDrawer} icon={<EditOutlined/>}>
+                    Редактировать тест
+                </Button>
+            ) : (
+                <Button block type={'dashed'} onClick={toggleShowDrawer} icon={<PlusOutlined/>}>
+                    Создать тест
+                </Button>
+            )}
             <QuizDrawer open={showDrawer} questions={value?.questions || []} onChange={handleChange} onClose={toggleShowDrawer}/>
         </div>
     )
