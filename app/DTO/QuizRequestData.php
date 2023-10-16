@@ -15,7 +15,7 @@ class QuizRequestData
     {
         $this->id = $quiz['id'] ?? null;
 
-        if(!isset($quiz)) {
+        if(!isset($quiz['questions'])) {
             return;
         }
 
