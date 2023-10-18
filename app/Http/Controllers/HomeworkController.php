@@ -7,6 +7,7 @@ use App\Exports\HomeworksExport;
 use App\Http\Requests\HomeworkChangeStatusRequest;
 use App\Http\Requests\HomeworkGradeRequest;
 use App\Http\Requests\Lessons\StoreAnswerRequest;
+use App\Http\Requests\Lessons\StoreHomeworkAnswerRequest;
 use App\Http\Resources\HomeworkResource;
 use App\Models\Answer;
 use App\Models\Homework;
@@ -59,11 +60,11 @@ class HomeworkController extends Controller
 
     /**
      * @param Homework $homework
-     * @param StoreAnswerRequest $request
+     * @param StoreHomeworkAnswerRequest $request
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function answer(Homework $homework, StoreAnswerRequest $request)
+    public function answer(Homework $homework, StoreHomeworkAnswerRequest $request)
     {
         /** @var User $user */
         $user = $request->user();

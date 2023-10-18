@@ -21,6 +21,7 @@ import {
     PanelHeaderContent, Tabs,
     TabsItem
 } from "@vkontakte/vkui";
+import {LESSON_TYPE} from "@/constants/lessons";
 
 const tabs = [
     {
@@ -45,6 +46,10 @@ export default function Lesson(props) {
     const {isStudent, isController} = useRole()
 
     const showHomeworkButtonTitle = useMemo(() => {
+        if(lesson.type === LESSON_TYPE.TESTING) {
+            return 'Пройти тестирование'
+        }
+
         if(!homework?.answers?.length || !homework?.status?.id) {
             return 'Добавить решение'
         }

@@ -4,35 +4,36 @@ namespace App\Http\Controllers;
 
 use App\DTO\QuizRequestData;
 use App\Enums\HomeworkStatusIdTerms;
-use App\Enums\LessonTypeEnum;
-use App\Http\Requests\Lessons\StoreAnswerRequest;
 use App\Http\Requests\Lessons\LessonRequest;
+use App\Http\Requests\Lessons\StoreAnswerRequest;
 use App\Http\Resources\HomeworkListResource;
 use App\Http\Resources\LessonResource;
-use App\Models\Answer;
 use App\Models\Course;
 use App\Models\Homework;
 use App\Models\Lesson;
 use App\Models\User;
+use App\Services\LessonService;
 use App\Services\QuizService;
 use App\Services\UsersService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Spatie\Activitylog\Models\Activity;
 
 class LessonController extends Controller
 {
-    private UsersService $usersService;
     private QuizService $quizService;
+    private LessonService $lessonService;
 
-    public function __construct(UsersService $usersService, QuizService $quizService)
+    public function __construct(
+        QuizService $quizService,
+        LessonService $lessonService
+    )
     {
-        $this->usersService = $usersService;
         $this->quizService = $quizService;
+        $this->lessonService = $lessonService;
     }
 
     /**
@@ -127,36 +128,9 @@ class LessonController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        DB::beginTransaction();
+        $requestData = $request->data();
 
-        if (!$user->mentor_id) {
-            $mentor = $this->usersService->setMentor($user);
-        }
-
-        /** @var Homework $hw */
-        $hw = $user->homeworks()->where('lesson_id', '=', $lesson->id)->first();
-
-        if (is_null($hw)) {
-            $this->authorize('create', [Homework::class, $lesson]);
-
-            $hw = $user->homeworks()->create([
-                'lesson_id' => $lesson->id,
-                'auditor_id' => $mentor->id ?? $user->mentor_id
-            ]);
-        }
-
-        $this->authorize('create', [Answer::class, $hw]);
-
-        /** @var Answer $answer */
-        $answer = $hw->answers()->create([
-            'content' => $request->get('content'),
-            'user_id' => $user->id
-        ]);
-
-        $mediaIds = collect($request->get('attachments'))->pluck('id')->toArray();
-        $answer->syncMedia($mediaIds, 'attachments');
-
-        DB::commit();
+        $this->lessonService->addAnswer($user, $lesson, $requestData);
 
         Session::flash('message', __('messages.answer.create'));
 
