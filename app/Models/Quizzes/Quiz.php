@@ -2,11 +2,13 @@
 
 namespace App\Models\Quizzes;
 
+use App\Models\Answer;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -28,6 +30,8 @@ use Illuminate\Support\Carbon;
  * @property-read Quiz|null $lesson
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Quizzes\Question[] $questions
  * @property-read int|null $questions_count
+ * @property-read \Plank\Mediable\MediableCollection|Answer[] $userAnswers
+ * @property-read int|null $user_answers_count
  */
 class Quiz extends Model
 {
@@ -42,5 +46,10 @@ class Quiz extends Model
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Quiz::class, 'lesson_id');
+    }
+
+    public function userAnswers(): MorphMany
+    {
+        return $this->morphMany(Answer::class, 'answerable');
     }
 }

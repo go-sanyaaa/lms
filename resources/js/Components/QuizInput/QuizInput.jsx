@@ -1,7 +1,7 @@
 import {Button} from "antd";
 import {EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useToggleState from "@/helpers/useToggleState";
-import QuizDrawer from "@/Components/QuizInput/QuizDrawer";
+import QuizEditDrawer from "@/Components/QuizInput/QuizEditDrawer";
 import {useCallback} from "react";
 
 const QuizInput = ({value, onChange}) => {
@@ -27,7 +27,7 @@ const QuizInput = ({value, onChange}) => {
                     Создать тест
                 </Button>
             )}
-            <QuizDrawer open={showDrawer} questions={value?.questions || []} onChange={handleChange} onClose={toggleShowDrawer}/>
+            <QuizEditDrawer open={showDrawer} questions={value?.questions || []} onChange={handleChange} onClose={toggleShowDrawer}/>
         </div>
     )
 }

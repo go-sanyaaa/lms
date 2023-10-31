@@ -1,14 +1,11 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head, Link} from '@inertiajs/inertia-react';
-import {Breadcrumb, Button} from "antd";
-import {ArrowRightOutlined, EditOutlined, HomeOutlined} from "@ant-design/icons";
+import {Head} from '@inertiajs/inertia-react';
+import {Button} from "antd";
+import {EditOutlined} from "@ant-design/icons";
 import FileAttachment from "@/Components/FileAttachment";
 import LessonDrawer from "@/Components/Lessons/LessonDrawer";
 import useToggleState from "@/helpers/useToggleState";
-import HomeworkDrawer from "@/Components/Homeworks/HomeworkDrawer";
-import {HomeworkStatus} from "@/constants/statuses";
-import HomeworkStatusBlock from "@/Components/Homeworks/HomeworkStatusBlock";
 import useRole from "@/helpers/useRole";
 import {
     Caption,
@@ -18,10 +15,13 @@ import {
     HorizontalScroll,
     Panel,
     PanelHeader,
-    PanelHeaderContent, Tabs,
+    PanelHeaderContent,
+    Tabs,
     TabsItem
 } from "@vkontakte/vkui";
 import {LESSON_TYPE} from "@/constants/lessons";
+import LessonHomeworkStatusInfo from "@/Components/Lessons/LessonHomeworkStatusInfo";
+import LessonQuizStatusInfo from "@/Components/Lessons/LessonQuizStatusInfo";
 
 const tabs = [
     {
@@ -40,26 +40,18 @@ export default function Lesson(props) {
 
     const [selectedTab, setSelectedTab] = useState('content')
 
-    const [showHomeworkDrawer,,toggleHomeworkDrawer] = useToggleState()
     const [showEditDrawer,,toggleEditDrawer] = useToggleState()
 
     const {isStudent, isController} = useRole()
 
-    const showHomeworkButtonTitle = useMemo(() => {
-        if(lesson.type === LESSON_TYPE.TESTING) {
-            return 'Пройти тестирование'
-        }
-
-        if(!homework?.answers?.length || !homework?.status?.id) {
-            return 'Добавить решение'
-        }
-
-        if(homework?.status?.id === HomeworkStatus.OPEN.id && homework?.answers?.length > 0) {
-            return 'Отправить решение на проверку'
-        }
-
-        return 'Посмотреть решение';
-    }, [homework])
+    const renderLessonStatusBlock = useCallback(() =>
+            lesson.type === LESSON_TYPE.TESTING ? (
+                <LessonQuizStatusInfo lesson={lesson}/>
+            ) : (
+                <LessonHomeworkStatusInfo lesson={lesson} canAddHomework={canAddHomework} homework={homework}
+                                          lastReworkDate={lastReworkDate}/>
+            )
+        , [lesson, canAddHomework, homework, lastReworkDate])
 
     return (
         <AuthenticatedLayout
@@ -87,22 +79,7 @@ export default function Lesson(props) {
                             {lesson.description}
                         </span>
 
-                        {isStudent && (
-                            <div className={'flex flex-col'}>
-                                <span className={'text-gray-400 text-lg'}>Решение: </span>
-                                <div
-                                    className={'border flex space-x-2 items-center mt-2 border-dashed border-gray-200 rounded-md p-2'}>
-                                    <HomeworkStatusBlock homework={homework}/>
-                                    <Button block disabled={!canAddHomework}
-                                            type={(!homework || homework?.status?.id === HomeworkStatus?.OPEN.id) && 'primary'}
-                                            onClick={toggleHomeworkDrawer}>
-                                        {showHomeworkButtonTitle} <ArrowRightOutlined/>
-                                    </Button>
-                                </div>
-                                <HomeworkDrawer lesson={lesson} homework={homework} reworkDate={lastReworkDate}
-                                                open={showHomeworkDrawer} onClose={toggleHomeworkDrawer}/>
-                            </div>
-                        )}
+                        {isStudent && renderLessonStatusBlock()}
                         {isController && (
                             <div className={'mt-4 pt-4 border-0 border-t border-solid border-gray-200'}>
                                 <Button onClick={toggleEditDrawer} icon={<EditOutlined/>}>Редактировать</Button>

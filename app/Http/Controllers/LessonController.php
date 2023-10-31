@@ -16,6 +16,7 @@ use App\Services\LessonService;
 use App\Services\QuizService;
 use App\Services\UsersService;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -46,7 +47,9 @@ class LessonController extends Controller
 
         $this->authorize('view', $lesson);
 
-        $lesson->load(['course', 'media']);
+        $lesson->load(['course', 'media', 'quiz',
+            'quiz.userAnswers' => fn(MorphMany $b) => $b->where('user_id', '=', $user->id)
+        ]);
 
         /** @var Homework $homework */
         $homework = $lesson->homeworks()

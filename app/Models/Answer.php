@@ -22,6 +22,7 @@ use Plank\Mediable\MediableCollection;
  * @property int $answerable_id
  * @property string $answerable_type
  * @property int $user_id
+ * @property array $data
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Model|Eloquent $answerable
@@ -46,6 +47,7 @@ use Plank\Mediable\MediableCollection;
  * @method static Builder|Answer withMediaAndVariants($tags = [], bool $matchAll = false)
  * @method static Builder|Answer withMediaAndVariantsMatchAll($tags = [])
  * @method static Builder|Answer withMediaMatchAll(bool $tags = [], bool $withVariants = false)
+ * @method static Builder|Answer whereData($value)
  * @mixin Eloquent
  */
 class Answer extends Model
@@ -53,7 +55,11 @@ class Answer extends Model
     use HasFactory, Mediable;
 
     protected $fillable = [
-        'content', 'user_id'
+        'content', 'user_id', 'data'
+    ];
+
+    protected $casts = [
+        'data' => 'json'
     ];
 
     public function author(): BelongsTo

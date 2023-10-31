@@ -9,7 +9,7 @@ import t from "prop-types"
 import {makeInitialQuestion} from "@/Components/QuizInput/Blocks/AnswerOptionsBlock";
 
 
-const QuizDrawer = ({open, onClose, questions = [], onChange}) => {
+const QuizEditDrawer = ({open, onClose, questions = [], onChange}) => {
     const removeBlock = useCallback((index) => {
         const newBlocks = [...questions]
         newBlocks.splice(index, 1)
@@ -120,11 +120,11 @@ const QuizDrawer = ({open, onClose, questions = [], onChange}) => {
     )
 }
 
-QuizDrawer.propTypes = {
+QuizEditDrawer.propTypes = {
     questions: t.array.isRequired,
     onChange: t.func.isRequired,
     open: t.bool,
     onClose: t.func.isRequired
 }
 
-export default QuizDrawer
+export default QuizEditDrawer

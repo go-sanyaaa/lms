@@ -20,7 +20,7 @@ class QuizAnswerResource extends JsonResource
             'id' => $answer->id,
             'key' => (string) $answer->id,
             'text' => $answer->text,
-            'is_correct' => $user->hasRole([Roles::Auditor->value, Roles::Controller->value]) ? (boolean) $answer->is_correct : null,
+            'is_correct' => $answer->is_correct,
         ];
     }
 }

@@ -4,3 +4,9 @@ export const HomeworkStatus = {
     COMPLETED: {title: 'Выполнен', key: 'completed', id: 5},
     REWORK: {title: 'На доработке', key: 'rework', id: 6},
 }
+
+export const QUIZ_STATUSES = {
+    IN_PROGRESS: 'in_progress',
+    CHECK: 'check',
+    COMPLETED: 'completed'
+}
