@@ -11,10 +11,10 @@ const LessonsTable = ({lessons}) => {
     return (
         <>
             <div className={'space-y-1'}>
-                {lessons.map(lesson => (
+                {lessons.map((lesson, index) => (
                     <Cell key={lesson.id} disabled className={'odd:bg-gray-100'}
                           after={<IconButton onClick={() => setSelectedLesson(lesson)}><Icon16PenOutline/></IconButton>}
-                          before={<Avatar initials={lesson.id}/>}>
+                          before={<Avatar initials={index + 1}/>}>
                         <div className={'flex flex-col'}>
                             <Subhead weight="3" className={'text-gray-500'}>{lesson.description}</Subhead>
                             <span>
