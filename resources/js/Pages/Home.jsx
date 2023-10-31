@@ -36,7 +36,7 @@ import LessonItem from "@/Components/Lessons/LessonItem";
 const filters = [
     {title: 'Все', func: () => true},
     {title: 'Доступные', func: lesson => lesson?.available},
-    {title: 'Оцененные', func: lesson => lesson?.homework?.grade}
+    {title: 'Выполненные', func: lesson => lesson?.homework?.grade || lesson?.quiz?.last_answer}
 ]
 
 const initialFilters = {
@@ -66,12 +66,13 @@ export default function Home({auth, course, homeworks, tasks, common = {}}) {
                 homework: find(homeworks, {lesson_id: lesson.id}),
             }))
             .map((lesson, index, lessons) => ({
+                index,
                 ...lesson,
-                available: isManager || index === 0 || moment() > moment(lesson?.finished_at) || (lessons[index - 1]?.homework && lessons[index - 1]?.homework?.status?.id !== HomeworkStatus.OPEN.id)
+                available: isManager || index === 0 || moment() > moment(lesson?.finished_at) || (lessons[index - 1])?.quiz?.last_answer || (lessons[index - 1]?.homework && lessons[index - 1]?.homework?.status?.id !== HomeworkStatus.OPEN.id)
             }))
     }, [lessons, homeworks])
 
-    const completedCount = extLessons.filter(lesson => lesson?.homework?.grade)?.length
+    const completedCount = extLessons.filter(lesson => lesson?.homework?.grade || lesson?.quiz?.last_answer)?.length
 
     const filteredLessons = useMemo(() => extLessons.filter(filter.func), [extLessons, filter])
 

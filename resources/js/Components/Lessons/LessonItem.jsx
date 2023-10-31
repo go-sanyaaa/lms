@@ -14,7 +14,7 @@ const LessonItem = ({lesson}) => {
             <div
                 className={`course-list-item ${lesson?.homework?.status && `course-list-item--${lesson?.homework?.status.key}`} flex justify-between ${!lesson.available && 'course-list-item--disabled'}`}>
                 <div className={'flex items-center space-x-3'}>
-                    <Avatar initials={lesson.id}/>
+                    <Avatar initials={lesson.index + 1}/>
 
                     <div className={'flex flex-col'}>
                         <span

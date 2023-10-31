@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class LessonPolicy
 {
@@ -47,12 +48,15 @@ class LessonPolicy
             ->where('course_id', '=', $lesson->course_id)
             ->where('id', '<', $lesson->id)
             ->orderBy('id', 'DESC')
+            ->with([
+                'quiz.userAnswers' => fn(MorphMany $b) => $b->where('user_id', '=', $user->id)
+            ])
             ->first();
 
         $completePrevLesson = !$prevLesson || $user->homeworks()
                 ->where('lesson_id', '=', $prevLesson->id)
                 ->where('status_id', '!=', HomeworkStatusIdTerms::Open->value)
-                ->exists();
+                ->exists() || $prevLesson->quiz->userAnswers?->count() > 0;
 
         return $studentHaveCourse && $completePrevLesson;
     }

@@ -6,6 +6,7 @@ import {useFormik} from "formik";
 import {isArray} from "lodash";
 import {useForm} from "@inertiajs/inertia-react";
 import {QUIZ_STATUSES} from "@/constants/statuses";
+import {Inertia} from "@inertiajs/inertia";
 
 
 const QuizDrawer = ({open, onClose, lessonId, quiz = null}) => {
@@ -62,7 +63,8 @@ const QuizDrawer = ({open, onClose, lessonId, quiz = null}) => {
             onOk: async () => {
                 const resp = await post(route('lesson.answer.store', lessonId), {
                     preserveScroll: true,
-                    preserveState: true
+                    preserveState: true,
+                    onSuccess: () => Inertia.visit(route('home'))
                 })
             }
         })

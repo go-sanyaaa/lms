@@ -12,6 +12,7 @@ use App\Models\Homework;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -31,6 +32,8 @@ class CourseController extends Controller
 
         /** @var null|Course $course */
         $course = Course::query()->find(1);
+
+        $course->load(['lessons.quiz.userAnswers' => fn(MorphMany $b) => $b->where('user_id', '=', $user->id)]);
 
         throw_unless($course, NotFoundHttpException::class);
 
